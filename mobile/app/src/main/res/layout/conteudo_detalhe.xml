@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Conteúdo do detalhe do arquivo. Incluído (<include>) em:
+     - activity_detalhe_arquivo.xml (celular)
+     - layout-sw600dp/activity_arquivos.xml (painel da direita no tablet)
+     Quem preenche é a classe PainelDetalhe. -->
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/painelDetalhe"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margem">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardPrevia"
+            android:layout_width="0dp"
+            android:layout_height="240dp"
+            app:cardBackgroundColor="@color/branco"
+            app:cardCornerRadius="@dimen/raio_cartao"
+            app:cardElevation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_max="@dimen/largura_max_detalhe"
+            app:strokeColor="@color/borda"
+            app:strokeWidth="1dp">
+
+            <ImageView
+                android:id="@+id/imgPrevia"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/cd_previa"
+                android:scaleType="fitCenter"
+                tools:src="@drawable/ic_document" />
+
+            <ProgressBar
+                android:id="@+id/progressPrevia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/txtNomeDetalhe"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/texto"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@id/cardPrevia"
+            app:layout_constraintStart_toStartOf="@id/cardPrevia"
+            app:layout_constraintTop_toBottomOf="@id/cardPrevia"
+            tools:text="relatorio-mensal.pdf" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardInfo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:cardBackgroundColor="@color/branco"
+            app:cardCornerRadius="@dimen/raio_cartao"
+            app:cardElevation="0dp"
+            app:layout_constraintEnd_toEndOf="@id/cardPrevia"
+            app:layout_constraintStart_toStartOf="@id/cardPrevia"
+            app:layout_constraintTop_toBottomOf="@id/txtNomeDetalhe"
+            app:strokeColor="@color/borda"
+            app:strokeWidth="1dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/margem">
+
+                <!-- Tipo -->
+                <TextView
+                    android:id="@+id/lblTipo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rotulo_tipo"
+                    android:textColor="@color/texto_secundario"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/txtTipo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:gravity="end"
+                    android:textColor="@color/texto"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/lblTipo"
+                    app:layout_constraintTop_toTopOf="@id/lblTipo"
+                    tools:text="application/pdf" />
+
+                <!-- Tamanho -->
+                <TextView
+                    android:id="@+id/lblTamanho"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/rotulo_tamanho"
+                    android:textColor="@color/texto_secundario"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txtTipo" />
+
+                <TextView
+                    android:id="@+id/txtTamanho"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:gravity="end"
+                    android:textColor="@color/texto"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/lblTamanho"
+                    app:layout_constraintTop_toTopOf="@id/lblTamanho"
+                    tools:text="825,5 KB" />
+
+                <!-- Enviado em -->
+                <TextView
+                    android:id="@+id/lblEnviadoEm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/rotulo_enviado_em"
+                    android:textColor="@color/texto_secundario"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txtTamanho" />
+
+                <TextView
+                    android:id="@+id/txtEnviadoEm"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:gravity="end"
+                    android:textColor="@color/texto"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/lblEnviadoEm"
+                    app:layout_constraintTop_toTopOf="@id/lblEnviadoEm"
+                    tools:text="18/10/2026" />
+
+                <!-- Bucket -->
+                <TextView
+                    android:id="@+id/lblBucket"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/rotulo_bucket"
+                    android:textColor="@color/texto_secundario"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txtEnviadoEm" />
+
+                <TextView
+                    android:id="@+id/txtBucket"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:gravity="end"
+                    android:textColor="@color/texto"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/lblBucket"
+                    app:layout_constraintTop_toTopOf="@id/lblBucket"
+                    tools:text="documentos" />
+
+                <!-- SHA-256 -->
+                <TextView
+                    android:id="@+id/lblSha"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/rotulo_sha256"
+                    android:textColor="@color/texto_secundario"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txtBucket" />
+
+                <TextView
+                    android:id="@+id/txtSha"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:fontFamily="monospace"
+                    android:gravity="end"
+                    android:textColor="@color/texto"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/lblSha"
+                    app:layout_constraintTop_toTopOf="@id/lblSha"
+                    tools:text="9f2c1a7b…e4d3c2" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnBaixar"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/altura_campo"
+            android:layout_marginTop="20dp"
+            android:text="@string/botao_baixar"
+            android:textSize="16sp"
+            app:cornerRadius="@dimen/raio_cartao"
+            app:icon="@drawable/ic_download"
+            app:iconGravity="textStart"
+            app:iconTint="@color/branco"
+            app:layout_constraintEnd_toEndOf="@id/cardPrevia"
+            app:layout_constraintStart_toStartOf="@id/cardPrevia"
+            app:layout_constraintTop_toBottomOf="@id/cardInfo" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnExcluir"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/altura_campo"
+            android:layout_marginTop="10dp"
+            android:text="@string/botao_excluir"
+            android:textColor="@color/vermelho"
+            android:textSize="16sp"
+            app:cornerRadius="@dimen/raio_cartao"
+            app:icon="@drawable/ic_delete"
+            app:iconGravity="textStart"
+            app:iconTint="@color/vermelho"
+            app:layout_constraintEnd_toEndOf="@id/cardPrevia"
+            app:layout_constraintStart_toStartOf="@id/cardPrevia"
+            app:layout_constraintTop_toBottomOf="@id/btnBaixar"
+            app:strokeColor="@color/vermelho" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
