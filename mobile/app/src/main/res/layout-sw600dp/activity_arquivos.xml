@@ -11,21 +11,21 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/fundo"
+    android:background="@drawable/bg_fundo_tela"
     tools:context=".ArquivosActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
+        style="@style/ToolbarEscura"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/fundo"
+        android:background="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_arrow_back"
-        app:subtitleTextColor="@color/texto_secundario"
-        tools:subtitle="5 arquivos"
-        tools:title="documentos" />
+        tools:subtitle="26 arquivos"
+        tools:title="fotos-obra" />
 
     <!-- Linha que separa a lista do painel, a 440 dp da esquerda -->
     <View
@@ -40,23 +40,104 @@
 
     <!-- ===== Coluna da esquerda: lista ===== -->
 
+    <!-- Pesquisa por nome -->
+    <EditText
+        android:id="@+id/edtBusca"
+        style="@style/Campo"
+        android:layout_width="0dp"
+        android:layout_marginStart="@dimen/margem"
+        android:layout_marginEnd="@dimen/margem"
+        android:autofillHints=""
+        android:drawableStart="@drawable/ic_search"
+        android:drawablePadding="10dp"
+        android:drawableTint="@color/texto_secundario"
+        android:hint="@string/buscar_arquivo"
+        android:imeOptions="actionSearch"
+        android:inputType="textNoSuggestions"
+        app:layout_constraintEnd_toStartOf="@id/divisor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+    <!-- Filtro por tipo -->
+    <HorizontalScrollView
+        android:id="@+id/rolagemChips"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:clipToPadding="false"
+        android:paddingStart="@dimen/margem"
+        android:paddingEnd="@dimen/margem"
+        android:scrollbars="none"
+        app:layout_constraintEnd_toStartOf="@id/divisor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edtBusca">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipsTipo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:checkedChip="@id/chipTodos"
+            app:selectionRequired="true"
+            app:singleLine="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipTodos"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filtro_todos" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipImagens"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filtro_imagens" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPdf"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filtro_pdf" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPlanilhas"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filtro_planilhas" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipOutros"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filtro_outros" />
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
     <ProgressBar
         android:id="@+id/progressEnvio"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:indeterminate="true"
+        android:indeterminateTint="@color/acento"
         android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@id/divisor"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@id/rolagemChips" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerArquivos"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/branco"
         android:clipToPadding="false"
+        android:paddingStart="@dimen/margem"
+        android:paddingTop="4dp"
+        android:paddingEnd="@dimen/margem"
         android:paddingBottom="96dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/divisor"
@@ -68,11 +149,12 @@
         android:id="@+id/progressCarregando"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:indeterminateTint="@color/acento"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/divisor"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@id/rolagemChips" />
 
     <TextView
         android:id="@+id/txtVazio"
@@ -80,15 +162,18 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
+        android:drawablePadding="16dp"
         android:gravity="center"
         android:text="@string/arquivos_vazio"
         android:textColor="@color/texto_secundario"
         android:textSize="16sp"
         android:visibility="gone"
+        app:drawableTopCompat="@drawable/ic_file"
+        app:drawableTint="@color/texto_secundario"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/divisor"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@id/rolagemChips" />
 
     <TextView
         android:id="@+id/txtErro"
@@ -102,7 +187,7 @@
         app:layout_constraintBottom_toTopOf="@id/btnTentar"
         app:layout_constraintEnd_toStartOf="@id/divisor"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintTop_toBottomOf="@id/rolagemChips"
         app:layout_constraintVertical_chainStyle="packed"
         tools:text="Não foi possível conectar ao servidor" />
 
@@ -113,7 +198,7 @@
         android:layout_height="@dimen/altura_campo"
         android:layout_marginTop="16dp"
         android:text="@string/botao_tentar_novamente"
-        app:cornerRadius="@dimen/raio_cartao"
+        app:cornerRadius="@dimen/raio_botao"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/divisor"
         app:layout_constraintStart_toStartOf="parent"
@@ -132,11 +217,12 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margem"
         android:contentDescription="@string/cd_enviar_arquivo"
-        app:backgroundTint="@color/azul_primario"
+        app:backgroundTint="@color/acento"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/divisor"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
         app:srcCompat="@drawable/ic_upload"
-        app:tint="@color/branco" />
+        app:tint="@color/texto_sobre_acento" />
 
     <!-- ===== Coluna da direita: detalhe ===== -->
 
@@ -146,10 +232,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
+        android:drawablePadding="16dp"
         android:gravity="center"
         android:text="@string/tablet_selecione"
         android:textColor="@color/texto_secundario"
         android:textSize="16sp"
+        app:drawableTopCompat="@drawable/ic_file"
+        app:drawableTint="@color/texto_secundario"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/divisor"

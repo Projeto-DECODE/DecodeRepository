@@ -6,14 +6,15 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/fundo"
+    android:background="@drawable/bg_fundo_tela"
     tools:context=".CadastroActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
+        style="@style/ToolbarEscura"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/fundo"
+        android:background="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -33,129 +34,118 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="@dimen/margem_tela"
-            android:paddingTop="16dp"
+            android:paddingTop="8dp"
             android:paddingEnd="@dimen/margem_tela"
             android:paddingBottom="@dimen/margem_tela">
 
-            <TextView
-                android:id="@+id/lblNome"
-                style="@style/Rotulo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:labelFor="@id/edtNome"
-                android:text="@string/campo_nome"
-                app:layout_constraintStart_toStartOf="@id/edtNome"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <EditText
-                android:id="@+id/edtNome"
-                style="@style/Campo"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardFormulario"
+                style="@style/CartaoVidro"
                 android:layout_width="0dp"
-                android:layout_marginTop="6dp"
-                android:autofillHints="name"
-                android:hint="@string/campo_nome"
-                android:inputType="textPersonName|textCapWords"
-                android:maxLength="100"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/lblNome"
-                app:layout_constraintWidth_max="@dimen/largura_max_form" />
-
-            <TextView
-                android:id="@+id/lblEmail"
-                style="@style/Rotulo"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:labelFor="@id/edtEmail"
-                android:text="@string/campo_email"
-                app:layout_constraintStart_toStartOf="@id/edtEmail"
-                app:layout_constraintTop_toBottomOf="@id/edtNome" />
-
-            <EditText
-                android:id="@+id/edtEmail"
-                style="@style/Campo"
-                android:layout_width="0dp"
-                android:layout_marginTop="6dp"
-                android:autofillHints="emailAddress"
-                android:hint="@string/campo_email"
-                android:inputType="textEmailAddress"
-                android:maxLength="254"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/lblEmail"
-                app:layout_constraintWidth_max="@dimen/largura_max_form" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_max="@dimen/largura_max_form">
 
-            <TextView
-                android:id="@+id/lblSenha"
-                style="@style/Rotulo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:labelFor="@id/edtSenha"
-                android:text="@string/campo_senha"
-                app:layout_constraintStart_toStartOf="@id/edtSenha"
-                app:layout_constraintTop_toBottomOf="@id/edtEmail" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/margem_tela">
 
-            <EditText
-                android:id="@+id/edtSenha"
-                style="@style/Campo"
-                android:layout_width="0dp"
-                android:layout_marginTop="6dp"
-                android:autofillHints="newPassword"
-                android:hint="@string/campo_senha"
-                android:imeOptions="actionDone"
-                android:inputType="textPassword"
-                android:maxLength="128"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/lblSenha"
-                app:layout_constraintWidth_max="@dimen/largura_max_form" />
+                    <TextView
+                        android:id="@+id/lblNome"
+                        style="@style/Rotulo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:labelFor="@id/edtNome"
+                        android:text="@string/campo_nome" />
 
-            <TextView
-                android:id="@+id/txtSenhaDica"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/senha_dica"
-                android:textColor="@color/texto_secundario"
-                android:textSize="13sp"
-                app:layout_constraintStart_toStartOf="@id/edtSenha"
-                app:layout_constraintTop_toBottomOf="@id/edtSenha" />
+                    <EditText
+                        android:id="@+id/edtNome"
+                        style="@style/Campo"
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="6dp"
+                        android:autofillHints="name"
+                        android:hint="@string/campo_nome"
+                        android:inputType="textPersonName|textCapWords"
+                        android:maxLength="100" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCadastrar"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/altura_campo"
-                android:layout_marginTop="24dp"
-                android:text="@string/botao_cadastrar"
-                android:textSize="16sp"
-                app:cornerRadius="@dimen/raio_cartao"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txtSenhaDica"
-                app:layout_constraintWidth_max="@dimen/largura_max_form" />
+                    <TextView
+                        android:id="@+id/lblEmail"
+                        style="@style/Rotulo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:labelFor="@id/edtEmail"
+                        android:text="@string/campo_email" />
 
-            <ProgressBar
-                android:id="@+id/progressCadastro"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginTop="12dp"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btnCadastrar" />
+                    <EditText
+                        android:id="@+id/edtEmail"
+                        style="@style/Campo"
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="6dp"
+                        android:autofillHints="emailAddress"
+                        android:hint="@string/campo_email"
+                        android:inputType="textEmailAddress"
+                        android:maxLength="254" />
 
-            <TextView
-                android:id="@+id/txtEntrar"
-                style="@style/Link"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/link_entrar"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/progressCadastro" />
+                    <TextView
+                        android:id="@+id/lblSenha"
+                        style="@style/Rotulo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:labelFor="@id/edtSenha"
+                        android:text="@string/campo_senha" />
+
+                    <EditText
+                        android:id="@+id/edtSenha"
+                        style="@style/Campo"
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="6dp"
+                        android:autofillHints="newPassword"
+                        android:hint="@string/campo_senha"
+                        android:imeOptions="actionDone"
+                        android:inputType="textPassword"
+                        android:maxLength="128" />
+
+                    <TextView
+                        android:id="@+id/txtSenhaDica"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/senha_dica"
+                        android:textColor="@color/texto_secundario"
+                        android:textSize="13sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnCadastrar"
+                        style="@style/BotaoPrimario"
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="24dp"
+                        android:text="@string/botao_cadastrar" />
+
+                    <ProgressBar
+                        android:id="@+id/progressCadastro"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="12dp"
+                        android:indeterminateTint="@color/acento"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/txtEntrar"
+                        style="@style/Link"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/link_entrar" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

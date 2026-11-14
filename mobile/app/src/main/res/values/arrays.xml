@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Opções do "Ordenar por" (a posição é usada no código) -->
+    <string-array name="ordens_bucket">
+        <item>@string/ordem_recentes</item>
+        <item>@string/ordem_nome</item>
+        <item>@string/ordem_arquivos</item>
+    </string-array>
+</resources>

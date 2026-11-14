@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MeuStorage</string>
+    <string name="app_name">DECODE</string>
 
     <!-- Login e cadastro -->
     <string name="login_subtitulo">Seus arquivos, organizados em buckets</string>
@@ -29,7 +29,7 @@
         <item quantity="other">%d buckets</item>
     </plurals>
     <string name="criado_em">Criado em %1$s</string>
-    <string name="buckets_vazio">Você ainda não tem buckets. Toque em + para criar o primeiro.</string>
+    <string name="buckets_vazio">Você ainda não tem buckets. Crie o primeiro.</string>
     <string name="novo_bucket_titulo">Novo bucket</string>
     <string name="novo_bucket_campo">Nome do bucket</string>
     <string name="novo_bucket_dica">Use letras minúsculas, números e hífen, de 3 a 63 caracteres.</string>
@@ -96,10 +96,45 @@
     <string name="msg_generico">Algo deu errado. Tente de novo.</string>
 
     <!-- Acessibilidade -->
-    <string name="cd_logo">Logo do MeuStorage</string>
+    <string name="cd_logo">Logo do DECODE</string>
     <string name="cd_novo_bucket">Criar bucket</string>
     <string name="cd_enviar_arquivo">Enviar arquivo</string>
     <string name="cd_tipo_arquivo">Tipo do arquivo</string>
     <string name="cd_pasta">Bucket</string>
     <string name="cd_previa">Prévia do arquivo</string>
+
+    <!-- Novo visual -->
+    <string name="login_titulo_cartao">Entrar</string>
+    <string name="slogan">Armazenamento na Nuvem com Controle Total</string>
+    <string name="painel">Painel</string>
+    <string name="resumo_buckets">%1$s · %2$s</string>
+    <string name="buscar_bucket">Buscar bucket</string>
+    <string name="buscar_arquivo">Pesquisar por nome</string>
+    <string name="modo_rotativo">Rotativo</string>
+    <string name="modo_grade">Grade</string>
+    <string name="modo_lista">Lista</string>
+    <string name="ordem_recentes">Mais recentes</string>
+    <string name="ordem_nome">Nome (A–Z)</string>
+    <string name="ordem_arquivos">Mais arquivos</string>
+    <string name="cd_ordem">Ordenar por</string>
+    <string name="criar_novo_bucket">Criar novo bucket</string>
+    <string name="buckets_nenhum_resultado">Nenhum bucket com "%1$s".</string>
+    <string name="limpar_busca">Limpar busca</string>
+    <string name="cd_imagens">Imagens</string>
+    <string name="cd_docs">Documentos</string>
+    <string name="cd_outros">Outros</string>
+    <string name="numero">%1$d</string>
+    <string name="sem_numero">—</string>
+    <string name="cd_bucket_posicao">%1$d de %2$d: %3$s</string>
+    <string name="filtro_todos">Todos</string>
+    <string name="filtro_imagens">Imagens</string>
+    <string name="filtro_pdf">PDF</string>
+    <string name="filtro_planilhas">Planilhas</string>
+    <string name="filtro_outros">Outros</string>
+    <string name="arquivos_nenhum_filtro">Nenhum arquivo encontrado com esses filtros.</string>
+    <string name="toque_para_enviar">Toque para enviar um arquivo</string>
+    <string name="limite_envio">Até 10 MB por arquivo</string>
+    <string name="carregar_mais">Carregar mais</string>
+    <string name="caminho_buckets">Meus buckets</string>
+    <string name="cd_avatar">Inicial do usuário</string>
 </resources>

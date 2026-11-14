@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="azul_primario">#1D4ED8</color>
-    <color name="azul_claro">#DBEAFE</color>
-    <color name="fundo">#F6F7F9</color>
+    <!-- Mesma paleta do site do DECODE -->
+    <color name="fundo">#1A1A1E</color>
+    <color name="cartao">#212328</color>
+    <color name="cartao_claro">#2A2D33</color>
+    <color name="borda">#34373E</color>
+    <color name="borda_suave">#1AFFFFFF</color> <!-- branco com 10% de opacidade -->
+    <color name="acento">#39FF14</color> <!-- verde neon: destaques -->
+    <color name="acento_suave">#76FF03</color>
+    <color name="acento_fundo">#1F39FF14</color> <!-- verde com 12% de opacidade -->
+    <color name="erro">#EF476A</color>
+    <color name="texto">#FAFAFA</color>
+    <color name="texto_secundario">#A0A0A0</color>
+    <color name="texto_sobre_acento">#1A1A1E</color>
     <color name="branco">#FFFFFF</color>
-    <color name="borda">#E5E7EB</color>
-    <color name="vermelho">#B91C1C</color>
-    <color name="texto">#111827</color>
-    <color name="texto_secundario">#4B5563</color>
+
+    <!-- Cor de cada tipo de arquivo (ícones) -->
+    <color name="tipo_imagem">#4285F4</color>
+    <color name="tipo_pdf">#EA4335</color>
+    <color name="tipo_planilha">#76FF03</color>
+    <color name="tipo_outro">#FF6F00</color>
 </resources>

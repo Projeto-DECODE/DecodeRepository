@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Tablet grande: 5 buckets por fileira, igual ao site -->
+    <integer name="colunas_grade">5</integer>
+</resources>

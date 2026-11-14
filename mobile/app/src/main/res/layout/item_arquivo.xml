@@ -1,66 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<!-- Linha de arquivo: cartão escuro com o ícone na cor do tipo -->
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card"
+    style="@style/CartaoVidro"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/branco"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?attr/selectableItemBackground"
-    android:minHeight="68dp"
-    android:paddingStart="@dimen/margem"
-    android:paddingEnd="@dimen/margem">
+    app:cardCornerRadius="12dp">
 
-    <ImageView
-        android:id="@+id/imgTipo"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@drawable/bg_icone"
-        android:contentDescription="@string/cd_tipo_arquivo"
-        android:padding="9dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/azul_primario"
-        tools:src="@drawable/ic_document" />
-
-    <TextView
-        android:id="@+id/txtNomeArquivo"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="14dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textColor="@color/texto"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@id/txtInfoArquivo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/imgTipo"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"
-        tools:text="relatorio-mensal.pdf" />
+        android:minHeight="72dp"
+        android:padding="12dp">
 
-    <TextView
-        android:id="@+id/txtInfoArquivo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:textColor="@color/texto_secundario"
-        android:textSize="13sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/txtNomeArquivo"
-        app:layout_constraintTop_toBottomOf="@id/txtNomeArquivo"
-        tools:text="825,5 KB · 18/10/2026" />
+        <FrameLayout
+            android:id="@+id/fundoIcone"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_icone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    <View
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="@color/borda"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/txtNomeArquivo" />
+            <ImageView
+                android:id="@+id/imgTipo"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/cd_tipo_arquivo"
+                tools:src="@drawable/ic_document" />
+        </FrameLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/txtNomeArquivo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/texto"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@id/txtInfoArquivo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/fundoIcone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="relatorio-mensal.pdf" />
+
+        <TextView
+            android:id="@+id/txtInfoArquivo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/texto_secundario"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/txtNomeArquivo"
+            app:layout_constraintTop_toBottomOf="@id/txtNomeArquivo"
+            tools:text="825,5 KB · 18/10/2026" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

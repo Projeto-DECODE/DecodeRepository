@@ -21,6 +21,7 @@ import java.util.UUID;
 import br.senai.sp.meustorage.model.Arquivo;
 import br.senai.sp.meustorage.model.Bucket;
 import br.senai.sp.meustorage.model.Pagina;
+import br.senai.sp.meustorage.model.ResumoBucket;
 import br.senai.sp.meustorage.model.Usuario;
 import br.senai.sp.meustorage.util.MensagensErro;
 
@@ -79,6 +80,18 @@ public final class MockDados {
 
         Bucket contratos = novoBucket("contratos", 20);
         exemplo(contratos, "contrato-fornecedor.pdf", TIPO_PDF, 310_000, 15);
+
+        Bucket relatorios = novoBucket("relatorios-mensais", 12);
+        String[] meses = {"janeiro", "fevereiro", "marco", "abril", "maio", "junho"};
+        for (String mes : meses) {
+            exemplo(relatorios, "relatorio-" + mes + ".xlsx", TIPO_XLSX, 48_000, 8);
+        }
+        exemplo(relatorios, "resumo-semestre.pdf", TIPO_PDF, 220_000, 7);
+
+        Bucket videos = novoBucket("videos-treinamento", 9);
+        exemplo(videos, "integracao-nr18.mp4", "video/mp4", 8_400_000, 6);
+        exemplo(videos, "uso-de-epi.mp4", "video/mp4", 6_100_000, 6);
+        exemplo(videos, "capa.png", TIPO_PNG, 320_000, 6);
 
         novoBucket("backups", 5); // vazio: pode ser excluído
     }
@@ -156,6 +169,20 @@ public final class MockDados {
         int fim = Math.min(inicio + tamanho, total);
         int totalPaginas = (total + tamanho - 1) / tamanho;
         return new Pagina<>(new ArrayList<>(todos.subList(inicio, fim)), pagina, tamanho, total, totalPaginas);
+    }
+
+    // Imagens · Docs · Outros e o tipo mais comum. Retorna null se o bucket não existir
+    public static synchronized ResumoBucket resumir(String bucketId) {
+        List<Arquivo> lista = arquivos.get(bucketId);
+        if (lista == null) {
+            return null;
+        }
+        ResumoBucket resumo = new ResumoBucket();
+        for (Arquivo arquivo : lista) {
+            resumo.adicionar(arquivo);
+        }
+        resumo.setTotal(lista.size());
+        return resumo;
     }
 
     // Retorna null se o bucket não existir

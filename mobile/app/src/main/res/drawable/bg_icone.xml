@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Círculo azul-claro atrás dos ícones das listas -->
+<!-- Quadrado arredondado atrás dos ícones. A cor é trocada no código (cor do tipo de arquivo). -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval">
-    <solid android:color="@color/azul_claro" />
+    android:shape="rectangle">
+    <solid android:color="@color/acento_fundo" />
+    <corners android:radius="12dp" />
 </shape>

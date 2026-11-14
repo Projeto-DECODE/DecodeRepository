@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Fundo dos campos de texto: borda cinza, azul quando focado -->
+<!-- Fundo dos campos de texto: escuro, borda verde quando focado -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="true">
         <shape android:shape="rectangle">
-            <solid android:color="@color/branco" />
-            <corners android:radius="@dimen/raio_cartao" />
-            <stroke android:width="2dp" android:color="@color/azul_primario" />
+            <solid android:color="@color/fundo" />
+            <corners android:radius="@dimen/raio_campo" />
+            <stroke android:width="2dp" android:color="@color/acento" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/branco" />
-            <corners android:radius="@dimen/raio_cartao" />
+            <solid android:color="@color/fundo" />
+            <corners android:radius="@dimen/raio_campo" />
             <stroke android:width="1dp" android:color="@color/borda" />
         </shape>
     </item>

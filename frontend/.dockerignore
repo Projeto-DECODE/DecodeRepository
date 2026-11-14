@@ -1,0 +1,16 @@
+# Não vai para dentro da imagem
+node_modules
+.next
+coverage
+.git
+.gitignore
+Dockerfile
+.dockerignore
+README.md
+*.log
+npm-debug.log*
+
+# Segredos: nunca entram na imagem
+.env
+.env.*
+!.env.example
