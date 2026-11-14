@@ -1,0 +1,52 @@
+# Segredos e credenciais (nunca commitar)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.jks
+*.tfstate
+*.tfstate.*
+*.tfvars
+secrets/
+application-local.*
+docker-compose.override.yml
+
+# Java / Spring Boot
+target/
+build/
+.gradle/
+*.class
+*.jar
+*.war
+hs_err_pid*
+
+# Node / React
+node_modules/
+dist/
+.next/
+coverage/
+npm-debug.log*
+
+# Python (ai-worker)
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+
+# Dados e artefatos locais
+data/raw/
+uploads/
+esdata/
+*.sqlite
+*.log
+*.bundle
+
+# IDEs e sistema operacional
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
