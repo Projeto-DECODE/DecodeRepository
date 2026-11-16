@@ -26,6 +26,7 @@ import br.senai.sp.meustorage.model.Arquivo;
 import br.senai.sp.meustorage.model.Bucket;
 import br.senai.sp.meustorage.model.ErroApi;
 import br.senai.sp.meustorage.model.Pagina;
+import br.senai.sp.meustorage.model.ResumoBucket;
 import br.senai.sp.meustorage.model.TokenResposta;
 import br.senai.sp.meustorage.model.Usuario;
 import br.senai.sp.meustorage.util.MensagensErro;
@@ -172,6 +173,57 @@ public class StorageRepository {
         ApiClient.objetos()
                 .listar(sessao.getCabecalho(), bucketId, pagina, Config.TAMANHO_PAGINA)
                 .enqueue(repassar(true, callback));
+    }
+
+    // Resumo do bucket (Imagens · Docs · Outros). O back-end não manda isso pronto:
+    // o app lê a lista de arquivos de 100 em 100 (limite do object-service) e conta.
+    private static final int PAGINA_MAXIMA_BACKEND = 100;
+    private static final int LIMITE_PAGINAS_RESUMO = 10; // até 1.000 arquivos por bucket
+
+    public void resumirBucket(String bucketId, RepositorioCallback<ResumoBucket> callback) {
+        if (semSessao(callback)) return;
+
+        if (Config.USAR_MOCK) {
+            ResumoBucket resumo = MockDados.resumir(bucketId);
+            if (resumo == null) {
+                erroMock(callback, MensagensErro.BUCKET_NOT_FOUND);
+            } else {
+                sucessoMock(callback, resumo);
+            }
+            return;
+        }
+        resumirPagina(bucketId, 0, new ResumoBucket(), callback);
+    }
+
+    private void resumirPagina(String bucketId, int pagina, ResumoBucket resumo,
+                               RepositorioCallback<ResumoBucket> callback) {
+        ApiClient.objetos()
+                .listar(sessao.getCabecalho(), bucketId, pagina, PAGINA_MAXIMA_BACKEND)
+                .enqueue(new Callback<Pagina<Arquivo>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<Pagina<Arquivo>> call, @NonNull Response<Pagina<Arquivo>> response) {
+                        Pagina<Arquivo> corpo = response.body();
+                        if (!response.isSuccessful() || corpo == null) {
+                            tratarErro(response, true, callback);
+                            return;
+                        }
+                        for (Arquivo arquivo : corpo.getConteudo()) {
+                            resumo.adicionar(arquivo);
+                        }
+                        resumo.setTotal(corpo.getTotalElementos());
+                        int proxima = pagina + 1;
+                        if (proxima < corpo.getTotalPaginas() && proxima < LIMITE_PAGINAS_RESUMO) {
+                            resumirPagina(bucketId, proxima, resumo, callback);
+                        } else {
+                            callback.onSucesso(resumo);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<Pagina<Arquivo>> call, @NonNull Throwable t) {
+                        callback.onErro(MensagensErro.SEM_CONEXAO, null);
+                    }
+                });
     }
 
     // Lê o arquivo escolhido (fora da thread principal) e envia

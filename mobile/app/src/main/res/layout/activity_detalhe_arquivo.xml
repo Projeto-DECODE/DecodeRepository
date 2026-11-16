@@ -6,14 +6,15 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/fundo"
+    android:background="@drawable/bg_fundo_tela"
     tools:context=".DetalheArquivoActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
+        style="@style/ToolbarEscura"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/fundo"
+        android:background="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

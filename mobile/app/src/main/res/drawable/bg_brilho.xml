@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Brilho verde suave atrás do cartão central do modo rotativo -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <gradient
+        android:type="radial"
+        android:gradientRadius="160dp"
+        android:startColor="#2639FF14"
+        android:endColor="#0039FF14" />
+</shape>

@@ -35,8 +35,20 @@ Buckets de exemplo:
 
 - `documentos`, `contratos`: arquivos pdf e xlsx. Arrastar para excluir → o bucket volta com "Esvazie o bucket antes de excluí-lo."
 - `fotos-obra`: 26 imagens → testa a paginação (20 + 6) e a prévia. `panorama-obra.jpg` tem mais de 10 MB e mostra só o ícone.
-- `backups`: vazio → pode ser excluído.
+- `relatorios-mensais`: planilhas → ícone verde de planilha.
+- `videos-treinamento`: vídeos e uma imagem → ícone laranja ("outros").
+- `backups`: vazio → pasta verde; pode ser excluído.
 - Criar um bucket com nome repetido → "Já existe um bucket com esse nome."
+
+### Tela "Meus buckets": 3 modos
+
+Os 3 botões ao lado do "Ordenar por" trocam o modo (o app lembra a última escolha):
+
+- **Rotativo**: carrossel. Deslize para os lados ou toque num cartão do lado para trazê-lo ao centro. Tocar no cartão do centro abre o bucket.
+- **Grade**: 2 por fileira no celular (4 no tablet, 5 em tablet grande). Arrastar o cartão para o lado exclui.
+- **Lista**: faixas na horizontal. Arrastar para o lado exclui.
+
+Em todos: busca instantânea, ordem (recentes, nome, mais arquivos), números **Imagens · Docs · Outros** e "Excluir" com "Desfazer".
 
 Os dados do mock ficam na memória e somem quando o app é fechado.
 
@@ -66,6 +78,18 @@ Os dados do mock ficam na memória e somem quando o app é fechado.
 3. Rode o app de novo (▶).
 
 No emulador, os endereços em `Config.java` seriam `http://10.0.2.2:PORTA/`.
+
+## 7. Testes automáticos
+
+Ficam em `app/src/test/java` (31 testes: formatos, nome do bucket, resumo
+Imagens · Docs · Outros e o modo mock). Rodam no computador, sem emulador.
+
+No Android Studio: clique com o botão direito na pasta `app/src/test/java`
+→ **Run 'Tests in java'**. Ou, no terminal do Android Studio:
+
+```
+gradlew test
+```
 
 ## Arquivos do projeto
 

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Área tracejada "Toque para enviar" -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#66212328" />
+    <corners android:radius="@dimen/raio_cartao" />
+    <stroke
+        android:width="2dp"
+        android:color="@color/borda"
+        android:dashWidth="8dp"
+        android:dashGap="6dp" />
+</shape>

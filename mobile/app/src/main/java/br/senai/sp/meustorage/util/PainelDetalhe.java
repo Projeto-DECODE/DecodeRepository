@@ -153,6 +153,7 @@ public class PainelDetalhe {
                 Bitmap bitmap = decodificar(bytes);
                 if (bitmap != null) {
                     imgPrevia.setPadding(0, 0, 0, 0);
+                    imgPrevia.clearColorFilter(); // a foto aparece com as cores reais
                     imgPrevia.setImageBitmap(bitmap);
                 }
             }
@@ -169,7 +170,10 @@ public class PainelDetalhe {
     private void mostrarIcone(Arquivo alvo) {
         int espaco = Math.round(64 * activity.getResources().getDisplayMetrics().density);
         imgPrevia.setPadding(espaco, espaco, espaco, espaco);
-        imgPrevia.setImageResource(alvo.isImagem() ? R.drawable.ic_image : R.drawable.ic_document);
+        // Ícone grande na cor do tipo (imagem azul, PDF vermelho, planilha verde, outros laranja)
+        String tipo = Formatos.tipo(alvo);
+        imgPrevia.setImageResource(Formatos.iconeDoTipo(tipo));
+        imgPrevia.setColorFilter(Formatos.corDoTipo(activity, tipo));
     }
 
     // Reduz a imagem (inSampleSize) para não estourar a memória com fotos grandes

@@ -5,7 +5,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -34,8 +38,10 @@ import br.senai.sp.meustorage.data.StorageRepository;
 import br.senai.sp.meustorage.model.Arquivo;
 import br.senai.sp.meustorage.model.Bucket;
 import br.senai.sp.meustorage.model.Pagina;
+import br.senai.sp.meustorage.util.Formatos;
 import br.senai.sp.meustorage.util.MensagensErro;
 import br.senai.sp.meustorage.util.PainelDetalhe;
+import br.senai.sp.meustorage.util.Preferencias;
 
 public class ArquivosActivity extends AppCompatActivity implements PainelDetalhe.Acoes {
 
@@ -54,6 +60,9 @@ public class ArquivosActivity extends AppCompatActivity implements PainelDetalhe
     private ProgressBar progressCarregando;
     private ProgressBar progressEnvio;
     private TextView txtVazio;
+    private Estado estado = Estado.CARREGANDO;
+    private String textoBusca = "";
+    private String tipoFiltro = null; // null = todos os tipos
     private TextView txtErro;
     private Group grupoErro;
     private FloatingActionButton fabEnviar;
@@ -114,6 +123,8 @@ public class ArquivosActivity extends AppCompatActivity implements PainelDetalhe
             finish();
             return;
         }
+        // Este passa a ser o "último bucket aberto" (fica em destaque na lista de buckets)
+        new Preferencias(this).salvarUltimoBucket(bucket.getId());
 
         repositorio = new StorageRepository(this);
 
@@ -129,6 +140,7 @@ public class ArquivosActivity extends AppCompatActivity implements PainelDetalhe
         grupoErro = findViewById(R.id.grupoErro);
         fabEnviar = findViewById(R.id.fabEnviar);
         View btnTentar = findViewById(R.id.btnTentar);
+        configurarPesquisa();
 
         adapter = new ArquivoAdapter(this::aoClicarArquivo);
         recyclerArquivos.setLayoutManager(new LinearLayoutManager(this));
@@ -236,7 +248,7 @@ public class ArquivosActivity extends AppCompatActivity implements PainelDetalhe
                 } else {
                     adapter.adicionar(resultado.getConteudo());
                 }
-                mudarEstado(adapter.getItemCount() == 0 ? Estado.VAZIO : Estado.CONTEUDO);
+                atualizarEstadoLista();
             }
 
             @Override
@@ -256,7 +268,60 @@ public class ArquivosActivity extends AppCompatActivity implements PainelDetalhe
         });
     }
 
+    // Lista vazia, sem resultado na pesquisa ou com conteúdo
+    private void atualizarEstadoLista() {
+        if (adapter.getTotalCarregados() == 0) {
+            txtVazio.setText(R.string.arquivos_vazio);
+            mudarEstado(Estado.VAZIO);
+        } else if (adapter.getItemCount() == 0) {
+            txtVazio.setText(R.string.arquivos_nenhum_filtro);
+            mudarEstado(Estado.VAZIO);
+        } else {
+            mudarEstado(Estado.CONTEUDO);
+        }
+    }
+
+    // Pesquisa por nome e filtro por tipo (nos arquivos já carregados)
+    private void configurarPesquisa() {
+        EditText edtBusca = findViewById(R.id.edtBusca);
+        ChipGroup chipsTipo = findViewById(R.id.chipsTipo);
+
+        edtBusca.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                textoBusca = s.toString();
+                aplicarFiltro();
+            }
+        });
+
+        chipsTipo.setOnCheckedStateChangeListener((grupo, ids) -> {
+            int id = ids.isEmpty() ? R.id.chipTodos : ids.get(0);
+            if (id == R.id.chipImagens) tipoFiltro = Formatos.TIPO_IMAGEM;
+            else if (id == R.id.chipPdf) tipoFiltro = Formatos.TIPO_PDF;
+            else if (id == R.id.chipPlanilhas) tipoFiltro = Formatos.TIPO_PLANILHA;
+            else if (id == R.id.chipOutros) tipoFiltro = Formatos.TIPO_OUTRO;
+            else tipoFiltro = null;
+            aplicarFiltro();
+        });
+    }
+
+    private void aplicarFiltro() {
+        adapter.setFiltro(textoBusca, tipoFiltro);
+        if (estado != Estado.CARREGANDO && estado != Estado.ERRO) {
+            atualizarEstadoLista();
+        }
+    }
+
     private void mudarEstado(Estado estado) {
+        this.estado = estado;
         progressCarregando.setVisibility(estado == Estado.CARREGANDO ? View.VISIBLE : View.GONE);
         recyclerArquivos.setVisibility(estado == Estado.CONTEUDO ? View.VISIBLE : View.GONE);
         txtVazio.setVisibility(estado == Estado.VAZIO ? View.VISIBLE : View.GONE);
@@ -392,7 +457,7 @@ public class ArquivosActivity extends AppCompatActivity implements PainelDetalhe
         Arquivo arquivo = adapter.remover(posicao);
         arquivoPendente = arquivo;
         if (adapter.getItemCount() == 0) {
-            mudarEstado(Estado.VAZIO);
+            atualizarEstadoLista();
         }
         if (painel != null && arquivoSelecionado != null && arquivoSelecionado.getId().equals(arquivo.getId())) {
             esconderPainel();
@@ -402,8 +467,8 @@ public class ArquivosActivity extends AppCompatActivity implements PainelDetalhe
                 .setAnchorView(fabEnviar)
                 .setAction(R.string.desfazer, v -> {
                     arquivoPendente = null;
-                    adapter.inserir(posicao, arquivo);
-                    mudarEstado(Estado.CONTEUDO);
+                    adapter.inserir(arquivo);
+                    atualizarEstadoLista();
                 })
                 .addCallback(new Snackbar.Callback() {
                     @Override

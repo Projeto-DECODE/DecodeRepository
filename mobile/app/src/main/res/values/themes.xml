@@ -1,26 +1,39 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Base.Theme.MeuStorage" parent="Theme.Material3.Light.NoActionBar">
-        <item name="colorPrimary">@color/azul_primario</item>
-        <item name="colorOnPrimary">@color/branco</item>
-        <item name="colorPrimaryContainer">@color/azul_claro</item>
-        <item name="colorOnPrimaryContainer">@color/azul_primario</item>
-        <item name="colorSecondary">@color/azul_primario</item>
-        <item name="colorError">@color/vermelho</item>
-        <item name="colorSurface">@color/branco</item>
+    <!-- Tema escuro com verde neon, igual ao site -->
+    <style name="Base.Theme.MeuStorage" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/acento</item>
+        <item name="colorOnPrimary">@color/texto_sobre_acento</item>
+        <item name="colorPrimaryContainer">@color/acento_fundo</item>
+        <item name="colorOnPrimaryContainer">@color/acento</item>
+        <item name="colorSecondary">@color/acento</item>
+        <item name="colorOnSecondary">@color/texto_sobre_acento</item>
+        <item name="colorSecondaryContainer">@color/acento_fundo</item>
+        <item name="colorOnSecondaryContainer">@color/acento</item>
+        <item name="colorError">@color/erro</item>
+        <item name="colorSurface">@color/cartao</item>
+        <item name="colorSurfaceContainer">@color/cartao</item>
+        <item name="colorSurfaceContainerHigh">@color/cartao</item>
+        <item name="colorSurfaceContainerHighest">@color/cartao_claro</item>
         <item name="colorOnSurface">@color/texto</item>
+        <item name="colorOnSurfaceVariant">@color/texto_secundario</item>
         <item name="colorOnBackground">@color/texto</item>
         <item name="colorOutline">@color/borda</item>
+        <item name="colorOutlineVariant">@color/borda</item>
         <item name="colorControlNormal">@color/texto_secundario</item>
+        <!-- Snackbar ("Bucket excluído · Desfazer") -->
+        <item name="colorSurfaceInverse">@color/cartao_claro</item>
+        <item name="colorOnSurfaceInverse">@color/texto</item>
+        <item name="colorPrimaryInverse">@color/acento</item>
         <item name="android:colorBackground">@color/fundo</item>
         <item name="android:windowBackground">@color/fundo</item>
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
     </style>
 
     <style name="Theme.MeuStorage" parent="Base.Theme.MeuStorage" />
 
-    <!-- Campo de texto padrão (52 dp, borda e cantos arredondados) -->
+    <!-- Campo de texto padrão (52 dp, fundo escuro, borda verde no foco) -->
     <style name="Campo">
         <item name="android:layout_height">@dimen/altura_campo</item>
         <item name="android:background">@drawable/bg_campo</item>
@@ -35,7 +48,6 @@
     <style name="Rotulo">
         <item name="android:textColor">@color/texto</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
     <!-- Link de texto (ex.: "Criar conta"), com área de toque de 48 dp -->
@@ -44,8 +56,53 @@
         <item name="android:gravity">center</item>
         <item name="android:paddingStart">8dp</item>
         <item name="android:paddingEnd">8dp</item>
-        <item name="android:textColor">@color/azul_primario</item>
+        <item name="android:textColor">@color/acento</item>
         <item name="android:textSize">15sp</item>
         <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+
+    <!-- Botão principal: verde com texto escuro -->
+    <style name="BotaoPrimario" parent="Widget.Material3.Button">
+        <item name="android:layout_height">@dimen/altura_campo</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="backgroundTint">@color/acento</item>
+        <item name="android:textColor">@color/texto_sobre_acento</item>
+        <item name="iconTint">@color/texto_sobre_acento</item>
+        <item name="cornerRadius">@dimen/raio_botao</item>
+    </style>
+
+    <!-- Botão de contorno vermelho (Excluir) -->
+    <style name="BotaoPerigo" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:layout_height">@dimen/altura_campo</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/erro</item>
+        <item name="iconTint">@color/erro</item>
+        <item name="strokeColor">@color/erro</item>
+        <item name="cornerRadius">@dimen/raio_botao</item>
+    </style>
+
+    <!-- Cartão de vidro: fundo escuro e borda clara bem fina -->
+    <style name="CartaoVidro" parent="Widget.Material3.CardView.Filled">
+        <item name="cardBackgroundColor">@color/cartao</item>
+        <item name="cardCornerRadius">@dimen/raio_cartao</item>
+        <item name="cardElevation">0dp</item>
+        <item name="strokeColor">@color/borda_suave</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <!-- Título grande das telas -->
+    <style name="TituloTela">
+        <item name="android:textColor">@color/texto</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Toolbar escura, com o texto claro -->
+    <style name="ToolbarEscura" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@color/fundo</item>
+        <item name="titleTextColor">@color/texto</item>
+        <item name="subtitleTextColor">@color/texto_secundario</item>
+        <item name="navigationIconTint">@color/texto</item>
     </style>
 </resources>

@@ -2,11 +2,16 @@
 <resources>
     <dimen name="altura_campo">52dp</dimen>
     <dimen name="toque_minimo">48dp</dimen>
-    <dimen name="raio_cartao">12dp</dimen>
+    <dimen name="raio_cartao">16dp</dimen>
+    <dimen name="raio_campo">10dp</dimen>
+    <dimen name="raio_botao">10dp</dimen>
     <dimen name="margem">16dp</dimen>
     <dimen name="margem_tela">24dp</dimen>
     <dimen name="largura_max_form">480dp</dimen>
     <dimen name="largura_max_lista">720dp</dimen>
     <dimen name="largura_max_detalhe">600dp</dimen>
     <dimen name="largura_lista_tablet">440dp</dimen>
+    <!-- Cartão do modo rotativo -->
+    <dimen name="largura_cartao_rotativo">240dp</dimen>
+    <dimen name="altura_cartao_rotativo">320dp</dimen>
 </resources>

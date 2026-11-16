@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Modo rotativo: um cartão do carrossel. A moldura ocupa a altura toda
+     e o cartão fica centralizado nela. A escala e a transparência mudam no código. -->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/largura_cartao_rotativo"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card"
+        style="@style/CartaoVidro"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/altura_cartao_rotativo"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardCornerRadius="20dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="16dp"
+            android:paddingTop="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="4dp">
+
+            <FrameLayout
+                android:id="@+id/fundoIcone"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:background="@drawable/bg_icone"
+                app:layout_constraintBottom_toTopOf="@id/txtNomeBucket"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed">
+
+                <ImageView
+                    android:id="@+id/imgTipo"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:layout_gravity="center"
+                    android:importantForAccessibility="no"
+                    tools:src="@drawable/ic_table" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/txtNomeBucket"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="2"
+                android:textColor="@color/texto"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/txtDataBucket"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fundoIcone"
+                tools:text="relatorios-mensais" />
+
+            <TextView
+                android:id="@+id/txtDataBucket"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:textColor="@color/texto_secundario"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@id/divisor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txtNomeBucket"
+                tools:text="Criado em 02/11/2026" />
+
+            <View
+                android:id="@+id/divisor"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/borda_suave"
+                app:layout_constraintBottom_toTopOf="@id/numeros"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txtDataBucket" />
+
+            <LinearLayout
+                android:id="@+id/numeros"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@id/btnExcluir"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divisor">
+
+            <TextView
+                android:id="@+id/txtImagens"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/cd_imagens"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/texto_secundario"
+                android:textSize="15sp"
+                app:drawableStartCompat="@drawable/ic_mini_image"
+                app:drawableTint="@color/texto_secundario"
+                tools:text="25" />
+
+            <TextView
+                android:id="@+id/txtDocs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:contentDescription="@string/cd_docs"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/texto_secundario"
+                android:textSize="15sp"
+                app:drawableStartCompat="@drawable/ic_mini_document"
+                app:drawableTint="@color/texto_secundario"
+                tools:text="3" />
+
+            <TextView
+                android:id="@+id/txtOutros"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:contentDescription="@string/cd_outros"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/texto_secundario"
+                android:textSize="15sp"
+                app:drawableStartCompat="@drawable/ic_mini_file"
+                app:drawableTint="@color/texto_secundario"
+                tools:text="0" />
+            </LinearLayout>
+
+        <TextView
+            android:id="@+id/btnExcluir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:minHeight="@dimen/toque_minimo"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:text="@string/botao_excluir"
+            android:textColor="@color/erro"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/numeros" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</FrameLayout>
