@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: auth-service
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        default_schema: auth
+  flyway:
+    schemas: auth
+    default-schema: auth
+    create-schemas: false
+
+server:
+  port: 8081
+  error:
+    include-stacktrace: never
+    include-message: never
+    include-binding-errors: never
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  pattern:
+    level: "%5p [auth-service,%X{traceId:-}]"
+
+sos:
+  jwt:
+    issuer: ${JWT_ISSUER:sos-auth-service}
+    user-audience: sos-api
+    internal-audience: sos-internal
+    # Padrão 15 min. A aplicação NÃO inicia se o valor passar de 30 min.
+    user-ttl: ${JWT_USER_TTL:15m}
+    service-ttl: ${JWT_SERVICE_TTL:5m}
+    # Caminho do PEM PKCS#8 da chave privada RSA (montado como arquivo, fora do repositório)
+    private-key-path: ${JWT_PRIVATE_KEY_PATH}
+  # clientId -> segredo (mínimo de 32 caracteres). Usado no client credentials.
+  service-clients:
+    bucket-service: ${BUCKET_SERVICE_CLIENT_SECRET}

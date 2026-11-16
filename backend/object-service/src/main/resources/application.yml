@@ -1,0 +1,65 @@
+spring:
+  application:
+    name: object-service
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        default_schema: objects
+  flyway:
+    schemas: objects
+    default-schema: objects
+    create-schemas: false
+  servlet:
+    multipart:
+      # Mantenha estes limites alinhados com sos.storage.max-file-size (mesma variável MAX_FILE_SIZE).
+      # max-request-size precisa ser um pouco maior que o arquivo, por causa do envelope multipart.
+      max-file-size: ${MAX_FILE_SIZE:50MB}
+      max-request-size: ${MAX_REQUEST_SIZE:51MB}
+      # Acima disso o Tomcat grava em disco em vez de manter na memória.
+      file-size-threshold: 1MB
+
+server:
+  port: 8083
+  error:
+    include-stacktrace: never
+    include-message: never
+    include-binding-errors: never
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  pattern:
+    level: "%5p [object-service,%X{traceId:-}]"
+
+sos:
+  security:
+    jwks-uri: ${JWKS_URI:http://auth-service:8081/.well-known/jwks.json}
+    issuer: ${JWT_ISSUER:sos-auth-service}
+    # sos-api: tokens de usuário (rotas /api/**). sos-internal: tokens de serviço (rotas /internal/**).
+    # O escopo (api ou internal) é verificado por rota em SecurityConfig.
+    allowed-audiences: sos-api,sos-internal
+  clients:
+    bucket-service-url: ${BUCKET_SERVICE_URL:http://bucket-service:8082}
+    connect-timeout: 2s
+    read-timeout: 5s
+  storage:
+    root: ${STORAGE_ROOT:/data/objects}
+    max-file-size: ${MAX_FILE_SIZE:50MB}

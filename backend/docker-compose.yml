@@ -1,0 +1,125 @@
+# Ambiente local do simple-object-storage.
+# Antes de subir: copie .env.example para .env, preencha os valores e rode scripts/generate-keys.sh.
+
+name: simple-object-storage
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_ADMIN_USER:?defina POSTGRES_ADMIN_USER no .env}
+      POSTGRES_PASSWORD: ${POSTGRES_ADMIN_PASSWORD:?defina POSTGRES_ADMIN_PASSWORD no .env}
+      POSTGRES_DB: sos
+      # Lidas apenas pelo script de inicialização (cria 1 role por serviço).
+      AUTH_DB_PASSWORD: ${AUTH_DB_PASSWORD:?defina AUTH_DB_PASSWORD no .env}
+      BUCKET_DB_PASSWORD: ${BUCKET_DB_PASSWORD:?defina BUCKET_DB_PASSWORD no .env}
+      OBJECT_DB_PASSWORD: ${OBJECT_DB_PASSWORD:?defina OBJECT_DB_PASSWORD no .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/postgres/init-databases.sh:/docker-entrypoint-initdb.d/10-init-databases.sh:ro
+    # Sem "ports": o PostgreSQL só é alcançável pela rede interna do Compose.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d sos"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks: [sos-net]
+
+  auth-service:
+    build: ./auth-service
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/sos
+      DB_USER: auth_svc
+      DB_PASSWORD: ${AUTH_DB_PASSWORD}
+      JWT_ISSUER: ${JWT_ISSUER:-sos-auth-service}
+      JWT_USER_TTL: ${JWT_USER_TTL:-15m}
+      JWT_SERVICE_TTL: ${JWT_SERVICE_TTL:-5m}
+      JWT_PRIVATE_KEY_PATH: /run/secrets/jwt_private_key
+      BUCKET_SERVICE_CLIENT_SECRET: ${BUCKET_SERVICE_CLIENT_SECRET:?defina BUCKET_SERVICE_CLIENT_SECRET no .env}
+    # A chave privada é montada somente aqui. bucket-service e object-service não a recebem.
+    secrets:
+      - jwt_private_key
+    ports:
+      - "127.0.0.1:8081:8081"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8081/actuator/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 40s
+    networks: [sos-net]
+
+  bucket-service:
+    build: ./bucket-service
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      auth-service:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/sos
+      DB_USER: bucket_svc
+      DB_PASSWORD: ${BUCKET_DB_PASSWORD}
+      JWKS_URI: http://auth-service:8081/.well-known/jwks.json
+      JWT_ISSUER: ${JWT_ISSUER:-sos-auth-service}
+      OBJECT_SERVICE_URL: http://object-service:8083
+      AUTH_SERVICE_URL: http://auth-service:8081
+      BUCKET_SERVICE_CLIENT_SECRET: ${BUCKET_SERVICE_CLIENT_SECRET}
+    ports:
+      - "127.0.0.1:8082:8082"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8082/actuator/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 40s
+    networks: [sos-net]
+
+  object-service:
+    build: ./object-service
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      auth-service:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/sos
+      DB_USER: object_svc
+      DB_PASSWORD: ${OBJECT_DB_PASSWORD}
+      JWKS_URI: http://auth-service:8081/.well-known/jwks.json
+      JWT_ISSUER: ${JWT_ISSUER:-sos-auth-service}
+      BUCKET_SERVICE_URL: http://bucket-service:8082
+      STORAGE_ROOT: /data/objects
+      MAX_FILE_SIZE: ${MAX_FILE_SIZE:-50MB}
+      MAX_REQUEST_SIZE: ${MAX_REQUEST_SIZE:-51MB}
+    volumes:
+      - objects_data:/data/objects
+    ports:
+      - "127.0.0.1:8083:8083"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8083/actuator/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 40s
+    networks: [sos-net]
+
+networks:
+  sos-net:
+
+volumes:
+  # Dados do PostgreSQL (usuários, buckets, metadados).
+  pgdata:
+  # Bytes dos objetos enviados.
+  objects_data:
+
+secrets:
+  jwt_private_key:
+    file: ./keys/private.pem

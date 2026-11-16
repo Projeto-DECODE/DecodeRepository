@@ -1,0 +1,57 @@
+spring:
+  application:
+    name: bucket-service
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        default_schema: bucket
+  flyway:
+    schemas: bucket
+    default-schema: bucket
+    create-schemas: false
+
+server:
+  port: 8082
+  error:
+    include-stacktrace: never
+    include-message: never
+    include-binding-errors: never
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  pattern:
+    level: "%5p [bucket-service,%X{traceId:-}]"
+
+sos:
+  security:
+    # Chave pública buscada no auth-service (JWKS). O bucket-service nunca vê a chave privada.
+    jwks-uri: ${JWKS_URI:http://auth-service:8081/.well-known/jwks.json}
+    issuer: ${JWT_ISSUER:sos-auth-service}
+    # Somente tokens de usuário. Tokens de serviço (aud=sos-internal) são rejeitados aqui.
+    allowed-audiences: sos-api
+  clients:
+    object-service-url: ${OBJECT_SERVICE_URL:http://object-service:8083}
+    auth-service-url: ${AUTH_SERVICE_URL:http://auth-service:8081}
+    client-id: bucket-service
+    client-secret: ${BUCKET_SERVICE_CLIENT_SECRET}
+    connect-timeout: 2s
+    read-timeout: 5s
