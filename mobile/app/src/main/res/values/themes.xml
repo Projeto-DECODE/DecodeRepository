@@ -1,0 +1,51 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Base.Theme.MeuStorage" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/azul_primario</item>
+        <item name="colorOnPrimary">@color/branco</item>
+        <item name="colorPrimaryContainer">@color/azul_claro</item>
+        <item name="colorOnPrimaryContainer">@color/azul_primario</item>
+        <item name="colorSecondary">@color/azul_primario</item>
+        <item name="colorError">@color/vermelho</item>
+        <item name="colorSurface">@color/branco</item>
+        <item name="colorOnSurface">@color/texto</item>
+        <item name="colorOnBackground">@color/texto</item>
+        <item name="colorOutline">@color/borda</item>
+        <item name="colorControlNormal">@color/texto_secundario</item>
+        <item name="android:colorBackground">@color/fundo</item>
+        <item name="android:windowBackground">@color/fundo</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+    </style>
+
+    <style name="Theme.MeuStorage" parent="Base.Theme.MeuStorage" />
+
+    <!-- Campo de texto padrão (52 dp, borda e cantos arredondados) -->
+    <style name="Campo">
+        <item name="android:layout_height">@dimen/altura_campo</item>
+        <item name="android:background">@drawable/bg_campo</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:textColor">@color/texto</item>
+        <item name="android:textColorHint">@color/texto_secundario</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- Rótulo acima de cada campo -->
+    <style name="Rotulo">
+        <item name="android:textColor">@color/texto</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Link de texto (ex.: "Criar conta"), com área de toque de 48 dp -->
+    <style name="Link">
+        <item name="android:minHeight">@dimen/toque_minimo</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:paddingEnd">8dp</item>
+        <item name="android:textColor">@color/azul_primario</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+</resources>
