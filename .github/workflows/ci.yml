@@ -31,6 +31,8 @@ jobs:
           distribution: temurin
           java-version: "21"
           cache: maven
+      - name: Compatibilidade do Testcontainers com Docker 29
+        run: echo "api.version=1.44" > ~/.docker-java.properties
       - run: mvn -B -ntp verify
 
   frontend:
