@@ -1,0 +1,59 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "backend/**"
+      - "frontend/**"
+      - "infra/**"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  publicar-imagens:
+    name: publicar imagens no ECR
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build e push (tag = SHA do commit)
+        env:
+          REGISTRY: ${{ vars.ECR_REGISTRY }}
+          TAG: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          publicar() {
+            local nome="$1"; shift
+            local imagem="$REGISTRY/decode/$nome:$TAG"
+            if docker manifest inspect "$imagem" >/dev/null 2>&1; then
+              echo "decode/$nome:$TAG já existe, pulando"
+              return
+            fi
+            docker build -t "$imagem" "$@"
+            docker push "$imagem"
+          }
+          publicar auth-service backend/auth-service
+          publicar bucket-service backend/bucket-service
+          publicar object-service backend/object-service
+          publicar frontend \
+            --build-arg BACKEND_AUTH_URL=http://auth-service:8081 \
+            --build-arg BACKEND_BUCKET_URL=http://bucket-service:8082 \
+            --build-arg BACKEND_OBJECT_URL=http://object-service:8083 \
+            frontend
