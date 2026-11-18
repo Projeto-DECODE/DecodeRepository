@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   publicar-imagens:
-    name: publicar imagens no ECR
+    name: publicar e implantar
     runs-on: ubuntu-latest
     environment: production
     steps:
@@ -57,3 +57,40 @@ jobs:
             --build-arg BACKEND_BUCKET_URL=http://bucket-service:8082 \
             --build-arg BACKEND_OBJECT_URL=http://object-service:8083 \
             frontend
+
+      - name: Implantar na EC2 (via SSM)
+        env:
+          TAG: ${{ github.sha }}
+          REGISTRY: ${{ vars.ECR_REGISTRY }}
+          INSTANCE: ${{ vars.EC2_INSTANCE_ID }}
+        run: |
+          set -euo pipefail
+          COMPOSE=$(base64 -w0 infra/docker-compose.prod.yml)
+          SCRIPT=$(base64 -w0 infra/deploy.sh)
+          CMD="cd /opt/decode"
+          CMD="$CMD && echo $COMPOSE | base64 -d > docker-compose.new.yml"
+          CMD="$CMD && echo $SCRIPT | base64 -d > deploy.sh"
+          CMD="$CMD && bash deploy.sh $TAG $REGISTRY"
+          jq -n --arg c "$CMD" '{commands: [$c]}' > params.json
+          ID=$(aws ssm send-command \
+            --instance-ids "$INSTANCE" \
+            --document-name AWS-RunShellScript \
+            --comment "deploy $TAG" \
+            --timeout-seconds 600 \
+            --parameters file://params.json \
+            --query Command.CommandId --output text)
+          echo "Comando SSM: $ID"
+          STATUS=Pending
+          for i in $(seq 1 60); do
+            sleep 10
+            STATUS=$(aws ssm get-command-invocation \
+              --command-id "$ID" --instance-id "$INSTANCE" \
+              --query Status --output text 2>/dev/null || echo Pending)
+            echo "[$i] $STATUS"
+            case "$STATUS" in Success|Failed|Cancelled|TimedOut) break ;; esac
+          done
+          aws ssm get-command-invocation --command-id "$ID" --instance-id "$INSTANCE" \
+            --query StandardOutputContent --output text
+          aws ssm get-command-invocation --command-id "$ID" --instance-id "$INSTANCE" \
+            --query StandardErrorContent --output text
+          test "$STATUS" = "Success"
