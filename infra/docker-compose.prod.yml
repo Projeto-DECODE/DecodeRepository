@@ -1,0 +1,154 @@
+# Produção (EC2 decode-app): imagens vêm do ECR e o banco é o RDS (fora do Compose).
+#
+# Uso, na EC2, em /opt/decode (com o arquivo .env ao lado deste):
+#   TAG=<sha-do-commit> docker compose up -d
+#
+# O .env (nunca versionado) define:
+#   ECR_REGISTRY, DB_HOST, AUTH_DB_PASSWORD, BUCKET_DB_PASSWORD,
+#   OBJECT_DB_PASSWORD, BUCKET_SERVICE_CLIENT_SECRET
+# A chave JWT fica em ./keys/private.pem (gerada na EC2, fora do Git).
+# Só o Nginx publica porta (80). Os serviços ficam na rede interna.
+
+name: decode
+
+x-comum: &comum
+  restart: unless-stopped
+  networks: [decode-net]
+
+services:
+  auth-service:
+    <<: *comum
+    image: ${ECR_REGISTRY:?defina ECR_REGISTRY}/decode/auth-service:${TAG:?defina TAG}
+    mem_limit: 900m
+    environment:
+      DB_URL: jdbc:postgresql://${DB_HOST:?defina DB_HOST}:5432/sos?sslmode=require
+      DB_USER: auth_svc
+      DB_PASSWORD: ${AUTH_DB_PASSWORD:?defina AUTH_DB_PASSWORD}
+      JWT_ISSUER: ${JWT_ISSUER:-sos-auth-service}
+      JWT_USER_TTL: ${JWT_USER_TTL:-15m}
+      JWT_SERVICE_TTL: ${JWT_SERVICE_TTL:-5m}
+      JWT_PRIVATE_KEY_PATH: /run/secrets/jwt_private_key
+      BUCKET_SERVICE_CLIENT_SECRET: ${BUCKET_SERVICE_CLIENT_SECRET:?defina BUCKET_SERVICE_CLIENT_SECRET}
+      SPRINGDOC_API_DOCS_ENABLED: "false"
+      SPRINGDOC_SWAGGER_UI_ENABLED: "false"
+    secrets:
+      - jwt_private_key
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8081/actuator/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 60s
+
+  bucket-service:
+    <<: *comum
+    image: ${ECR_REGISTRY}/decode/bucket-service:${TAG}
+    mem_limit: 900m
+    depends_on:
+      auth-service:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://${DB_HOST}:5432/sos?sslmode=require
+      DB_USER: bucket_svc
+      DB_PASSWORD: ${BUCKET_DB_PASSWORD:?defina BUCKET_DB_PASSWORD}
+      JWKS_URI: http://auth-service:8081/.well-known/jwks.json
+      JWT_ISSUER: ${JWT_ISSUER:-sos-auth-service}
+      OBJECT_SERVICE_URL: http://object-service:8083
+      AUTH_SERVICE_URL: http://auth-service:8081
+      BUCKET_SERVICE_CLIENT_SECRET: ${BUCKET_SERVICE_CLIENT_SECRET}
+      SPRINGDOC_API_DOCS_ENABLED: "false"
+      SPRINGDOC_SWAGGER_UI_ENABLED: "false"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8082/actuator/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 60s
+
+  object-service:
+    <<: *comum
+    image: ${ECR_REGISTRY}/decode/object-service:${TAG}
+    mem_limit: 900m
+    depends_on:
+      auth-service:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://${DB_HOST}:5432/sos?sslmode=require
+      DB_USER: object_svc
+      DB_PASSWORD: ${OBJECT_DB_PASSWORD:?defina OBJECT_DB_PASSWORD}
+      JWKS_URI: http://auth-service:8081/.well-known/jwks.json
+      JWT_ISSUER: ${JWT_ISSUER:-sos-auth-service}
+      BUCKET_SERVICE_URL: http://bucket-service:8082
+      STORAGE_ROOT: /data/objects
+      MAX_FILE_SIZE: ${MAX_FILE_SIZE:-50MB}
+      MAX_REQUEST_SIZE: ${MAX_REQUEST_SIZE:-51MB}
+      SPRINGDOC_API_DOCS_ENABLED: "false"
+      SPRINGDOC_SWAGGER_UI_ENABLED: "false"
+    volumes:
+      - objects_data:/data/objects
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8083/actuator/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 60s
+
+  frontend:
+    <<: *comum
+    image: ${ECR_REGISTRY}/decode/frontend:${TAG}
+    mem_limit: 384m
+    depends_on:
+      auth-service:
+        condition: service_healthy
+      bucket-service:
+        condition: service_healthy
+      object-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:3000/"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 15s
+
+  nginx:
+    <<: *comum
+    image: nginx:1.27-alpine
+    mem_limit: 64m
+    ports:
+      - "80:80"
+    depends_on:
+      frontend:
+        condition: service_healthy
+    configs:
+      - source: nginx_conf
+        target: /etc/nginx/conf.d/default.conf
+
+configs:
+  nginx_conf:
+    content: |
+      server {
+        listen 80;
+        server_name _;
+        client_max_body_size 60m;
+        location / {
+          proxy_pass http://frontend:3000;
+          proxy_http_version 1.1;
+          proxy_set_header Host $$host;
+          proxy_set_header X-Real-IP $$remote_addr;
+          proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $$scheme;
+          proxy_read_timeout 120s;
+        }
+      }
+
+secrets:
+  jwt_private_key:
+    file: ./keys/private.pem
+
+networks:
+  decode-net:
+
+volumes:
+  # Bytes dos objetos enviados (volume local da EC2, no disco EBS).
+  objects_data:
