@@ -5,3 +5,5 @@ line-length = 120
 
 [lint]
 select = ["E", "F", "B"]
+# B904 (raise ... from) é recomendação de estilo de exceção, não bug; fica de fora de propósito
+ignore = ["B904"]

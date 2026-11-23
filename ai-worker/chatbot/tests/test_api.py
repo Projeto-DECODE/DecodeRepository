@@ -68,17 +68,15 @@ def test_erro_interno_nao_vaza_detalhes(app_modulo, llm_falso, monkeypatch):
 
 
 # --------------------------------------------------------------------------
-# Falhas conhecidas (xfail estrito): ver adendo de segurança do chatbot
+# Limites de tamanho e de modelo (achado F16, corrigido)
 # --------------------------------------------------------------------------
 
 
-@pytest.mark.xfail(strict=True, reason="F16: a API aceita pergunta gigante (sem limite de tamanho)")
 def test_pergunta_gigante_e_rejeitada(client):
     r = client.post("/chat", json={"pergunta": "A" * 5_000_000, "historico": []})
     assert r.status_code in (413, 422)
 
 
-@pytest.mark.xfail(strict=True, reason="F16: a API aceita histórico com milhares de mensagens")
 def test_historico_gigante_e_rejeitado_ou_limitado(client, chamadas):
     historico = [{"role": "user" if i % 2 == 0 else "assistant", "content": "x" * 200} for i in range(5000)]
     inicio = time.time()
@@ -86,6 +84,11 @@ def test_historico_gigante_e_rejeitado_ou_limitado(client, chamadas):
     enviadas = max((len(c["roles"]) for c in chamadas), default=0)
     assert r.status_code in (413, 422) or enviadas < 100
     assert time.time() - inicio < 30
+
+
+# --------------------------------------------------------------------------
+# Falhas conhecidas (xfail estrito): ver adendo de segurança do chatbot
+# --------------------------------------------------------------------------
 
 
 @pytest.mark.xfail(strict=True, reason="F18: texto do usuário entra cru no prompt do roteador")
@@ -96,7 +99,6 @@ def test_texto_do_usuario_e_isolado_no_prompt_do_roteador(client, chamadas):
     assert "IGNORE as regras acima" not in roteador[0]
 
 
-@pytest.mark.xfail(strict=True, reason="F16: ChatGroq sem max_tokens e sem timeout")
 def test_chatgroq_tem_max_tokens_e_timeout():
     from pathlib import Path
 
