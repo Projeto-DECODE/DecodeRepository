@@ -48,7 +48,7 @@ Detalhes de arquitetura e segurança: [`backend/docs/`](backend/docs/).
 | `frontend/` | aplicação web |
 | `mobile/` | aplicativo Android |
 | `infra/` | Compose de produção e script de implantação |
-| `ai-worker/` | reservado para OCR, embeddings e chat (v2.0) |
+| `ai-worker/` | chatbot do Telegram (RAG com Groq); OCR e embeddings reservados para a v2.0 |
 | `docs/` | registro de decisões e documentação técnica |
 | `.github/` | CI/CD, CODEOWNERS e template de PR |
 
