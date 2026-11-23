@@ -50,7 +50,7 @@ Usuário no Telegram
 | `diagnostico_busca.py` | Mostra quais itens da base a busca encontra para cada pergunta (útil se o bot responder "não consta" sem motivo) |
 | `requirements.txt` | Bibliotecas (lista do professor + `pyTelegramBotAPI` e `requests`) |
 | `env.example.txt` | Modelo do `.env` (vira `.env` na EC2) |
-| `deploy/decode-api.service` e `deploy/decode-bot.service` | Mantêm API e bot ligados (Parte 10) |
+| `deploy/decode-api.service` e `deploy/decode-bot.service` | Mantêm API e bot ligados (Parte 10). Refletem a instalação real na EC2 do DECODE (`/opt/decode-chatbot`) |
 
 ### O que o repositório do DECODE já tem (e o que isso muda para nós)
 
@@ -518,7 +518,9 @@ sudo systemctl restart decode-api
 sudo systemctl restart decode-bot
 ```
 
-> Os arquivos `.service` assumem o usuário `ubuntu` e a pasta `/home/ubuntu/decode-chatbot`. Se o Eduardo criar a máquina com outro usuário, ajuste as linhas `User=` e os caminhos.
+> **Atenção — instalação real na EC2 do DECODE.** Esta Parte 10 descreve a instalação de teste (usuário `ubuntu`, pasta `/home/ubuntu/decode-chatbot`). Na EC2 do projeto o chatbot foi instalado de outra forma: usuário de sistema `decode-chatbot`, pasta `/opt/decode-chatbot`, API só em `127.0.0.1:8000` e limites de memória. Os arquivos `deploy/*.service` deste repositório já refletem essa instalação real. O passo a passo atual de instalação, operação e atualização está em **`docs/implantacao.md`, seção 9**; em caso de divergência com este guia, vale a seção 9.
+>
+> Se a máquina for criada com outro usuário ou outra pasta, ajuste as linhas `User=`, `WorkingDirectory=`, `ExecStart=` e `HOME` das duas units.
 
 ---
 

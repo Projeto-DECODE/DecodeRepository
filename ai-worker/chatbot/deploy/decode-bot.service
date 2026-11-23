@@ -3,7 +3,9 @@
 # =====================================================
 #
 # Instalar em: /etc/systemd/system/decode-bot.service
-# (passo a passo no GUIA, Parte 10)
+# Este arquivo é a CÓPIA FIEL do que roda na EC2 do DECODE
+# (instalação em /opt/decode-chatbot, usuário decode-chatbot).
+# Passo a passo completo: docs/implantacao.md, seção 9.
 
 [Unit]
 Description=DECODE Bot do Telegram
@@ -13,14 +15,21 @@ After=network.target decode-api.service
 Wants=decode-api.service
 
 [Service]
-User=ubuntu
-WorkingDirectory=/home/ubuntu/decode-chatbot
+# Usuário de sistema, sem login e sem senha
+User=decode-chatbot
+WorkingDirectory=/opt/decode-chatbot/repo/ai-worker/chatbot
 # Mesmo comando que você roda à mão (python da .venv)
-ExecStart=/home/ubuntu/decode-chatbot/.venv/bin/python bot.py
-Restart=always
-RestartSec=5
+ExecStart=/opt/decode-chatbot/.venv/bin/python bot.py
+Environment=HOME=/opt/decode-chatbot
 # Mostra os prints do bot na hora no journalctl
 Environment=PYTHONUNBUFFERED=1
+Restart=always
+RestartSec=5
+# O bot é leve: limite de memória baixo
+MemoryMax=400M
+Nice=10
+NoNewPrivileges=true
+PrivateTmp=true
 
 [Install]
 WantedBy=multi-user.target

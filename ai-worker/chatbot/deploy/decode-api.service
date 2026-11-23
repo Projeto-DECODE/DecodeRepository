@@ -3,7 +3,9 @@
 # =====================================================
 #
 # Instalar em: /etc/systemd/system/decode-api.service
-# (passo a passo no GUIA, Parte 10)
+# Este arquivo é a CÓPIA FIEL do que roda na EC2 do DECODE
+# (instalação em /opt/decode-chatbot, usuário decode-chatbot).
+# Passo a passo completo: docs/implantacao.md, seção 9.
 #
 # Sem este arquivo, a API (uvicorn) para quando você
 # fecha o terminal. Com ele, o Ubuntu liga a API sozinho
@@ -16,16 +18,27 @@ Description=DECODE API (FastAPI + uvicorn)
 After=network.target
 
 [Service]
-# Usuário padrão da EC2 com Ubuntu
-User=ubuntu
-# Pasta do projeto (onde estão app.py, .env e banco_chroma)
-WorkingDirectory=/home/ubuntu/decode-chatbot
-# Mesmo comando que você roda à mão, usando o uvicorn da .venv
-ExecStart=/home/ubuntu/decode-chatbot/.venv/bin/uvicorn app:app --host 0.0.0.0 --port 8000
+# Usuário de sistema, sem login e sem senha
+User=decode-chatbot
+# Pasta do chatbot dentro do clone (onde estão app.py, .env e banco_chroma)
+WorkingDirectory=/opt/decode-chatbot/repo/ai-worker/chatbot
+# uvicorn da .venv. Escuta SÓ em 127.0.0.1: a API não fica exposta na internet
+# (o bot chama a API pela própria máquina)
+ExecStart=/opt/decode-chatbot/.venv/bin/uvicorn app:app --host 127.0.0.1 --port 8000
+# Pasta pessoal do usuário (cache do modelo de embeddings)
+Environment=HOME=/opt/decode-chatbot
 # Se o programa parar por erro, liga de novo
 Restart=always
 # Espera 5 segundos antes de religar
 RestartSec=5
+# Limite de memória: o chatbot nunca derruba o site que roda na mesma EC2
+MemoryMax=2500M
+# Prioridade de CPU menor que a do site
+Nice=10
+# O processo não pode ganhar privilégios novos
+NoNewPrivileges=true
+# /tmp próprio e isolado do resto do sistema
+PrivateTmp=true
 
 [Install]
 # Liga automaticamente quando a máquina inicia
