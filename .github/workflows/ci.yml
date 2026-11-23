@@ -68,3 +68,48 @@ jobs:
       - uses: gradle/actions/wrapper-validation@v4
       - uses: gradle/actions/setup-gradle@v4
       - run: ./gradlew testDebugUnitTest
+
+  chatbot:
+    name: chatbot
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ai-worker/chatbot
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: ai-worker/chatbot/requirements-ci.txt
+      - run: pip install -r requirements-ci.txt
+      - name: Erros de código (ruff)
+        run: ruff check .
+      - name: Segurança do código (bandit, gravidade média ou maior)
+        run: bandit -q -r . -ll -x ./teste.py,./tests
+      - name: Testes da API e do bot (LLM simulado, sem rede e sem chaves)
+        run: pytest -q
+
+  # Job separado de propósito: um aviso novo de vulnerabilidade não deve
+  # derrubar o job "chatbot" nem bloquear merges que não tocam nas dependências.
+  chatbot-deps:
+    name: chatbot (dependências)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ai-worker/chatbot
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pip-audit==2.10.1
+      # Os 4 avisos do chromadb valem só para o Chroma em MODO SERVIDOR; o chatbot
+      # usa o Chroma embarcado (persist_directory). Reavaliar se isso mudar.
+      - name: Vulnerabilidades conhecidas nas versões de produção
+        run: >
+          pip-audit -r requirements.lock --no-deps --disable-pip
+          --ignore-vuln PYSEC-2026-311
+          --ignore-vuln PYSEC-2026-3813
+          --ignore-vuln PYSEC-2026-3814
+          --ignore-vuln PYSEC-2026-3815

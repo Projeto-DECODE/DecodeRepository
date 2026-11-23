@@ -1,0 +1,7 @@
+# Regras do ruff para o chatbot: só erros de verdade (pyflakes, pycodestyle
+# de erro e bugbear). Estilo e ordem de imports ficam de fora de propósito.
+target-version = "py312"
+line-length = 120
+
+[lint]
+select = ["E", "F", "B"]
