@@ -37,7 +37,8 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 
 # Define o formato dos dados que a API recebe
-from pydantic import BaseModel
+# (Field permite colocar LIMITES: tamanho máximo dos textos e da lista)
+from pydantic import BaseModel, Field
 
 # Modelo de linguagem da Groq
 from langchain_groq import ChatGroq
@@ -73,15 +74,21 @@ print(
 # =====================================================
 
 # temperature=0.3 -> respostas mais objetivas (pouca criatividade)
-# max_tokens=None -> sem limite definido por nós
-# timeout=None    -> sem limite de tempo definido por nós
-# max_retries=2   -> tenta de novo até 2 vezes se der erro de rede
+# max_tokens=1000 -> LIMITE de tamanho da resposta (achado F16).
+#                    Este modelo "raciocina" antes de responder e
+#                    esse raciocínio também conta nos tokens; por
+#                    isso o valor não é tão pequeno. Se as respostas
+#                    saírem cortadas, aumente; se o consumo da Groq
+#                    preocupar, diminua.
+# timeout=30      -> desiste se a Groq não responder em 30 segundos,
+#                    em vez de ficar esperando para sempre
+# max_retries=1   -> tenta de novo só 1 vez se der erro de rede
 llm = ChatGroq(
     model="openai/gpt-oss-20b",
     temperature=0.3,
-    max_tokens=None,
-    timeout=None,
-    max_retries=2
+    max_tokens=1000,
+    timeout=30,
+    max_retries=1
 )
 
 print(
@@ -435,24 +442,40 @@ def rotear_agente(
 # Modelos da requisição
 # =====================================================
 
+# LIMITES da requisição (achado F16 do adendo de segurança).
+# Se alguém enviar algo maior, a API recusa com erro 422
+# ANTES de chamar o modelo, então não gasta a cota da Groq.
+#   - pergunta: até 2.000 caracteres (o Telegram aceita 4.096);
+#   - cada mensagem do histórico: até 4.000 caracteres;
+#   - histórico: até 30 mensagens (o bot envia no máximo 21:
+#     a 1ª mensagem + as 20 mais recentes).
+TAMANHO_MAXIMO_PERGUNTA = 2000
+TAMANHO_MAXIMO_MENSAGEM = 4000
+ITENS_MAXIMOS_HISTORICO = 30
+
+
 # Uma mensagem do histórico:
 #   role    -> "user" (usuário) ou "assistant" (IA)
-#   content -> texto da mensagem
+#   content -> texto da mensagem (com tamanho máximo)
 class Mensagem(BaseModel):
 
     role: str
 
-    content: str
+    content: str = Field(max_length=TAMANHO_MAXIMO_MENSAGEM)
 
 
 # Corpo do POST /chat:
-#   pergunta  -> obrigatória
-#   historico -> opcional (se não vier, é uma lista vazia)
+#   pergunta  -> obrigatória (com tamanho máximo)
+#   historico -> opcional (se não vier, é uma lista vazia),
+#                com no máximo 30 mensagens
 class Pergunta(BaseModel):
 
-    pergunta: str
+    pergunta: str = Field(max_length=TAMANHO_MAXIMO_PERGUNTA)
 
-    historico: list[Mensagem] = []
+    historico: list[Mensagem] = Field(
+        default=[],
+        max_length=ITENS_MAXIMOS_HISTORICO
+    )
 
 
 # =====================================================
