@@ -73,7 +73,8 @@ print(
 # Configurações do modelo
 # =====================================================
 
-# temperature=0.3 -> respostas mais objetivas (pouca criatividade)
+# temperature=0   -> sem criatividade: a resposta fica mais estável e
+#                    o modelo tem menos espaço para inventar (achado F19)
 # max_tokens=1000 -> LIMITE de tamanho da resposta (achado F16).
 #                    Este modelo "raciocina" antes de responder e
 #                    esse raciocínio também conta nos tokens; por
@@ -85,7 +86,7 @@ print(
 # max_retries=1   -> tenta de novo só 1 vez se der erro de rede
 llm = ChatGroq(
     model="openai/gpt-oss-20b",
-    temperature=0.3,
+    temperature=0,
     max_tokens=1000,
     timeout=30,
     max_retries=1
@@ -139,10 +140,12 @@ def consultar_base_decode(pergunta: str) -> str:
     ou funcionamento deste chatbot no Telegram.
     """
 
-    # Busca os 3 chunks mais parecidos com a pergunta
+    # Busca os 5 chunks mais parecidos com a pergunta.
+    # (Eram 3. Com a base maior, o item certo às vezes ficava em
+    # 4º lugar, por uma diferença mínima; com 5 ele não se perde.)
     documentos = vectorstore.similarity_search(
         pergunta,
-        k=3
+        k=5
     )
 
     # Se não veio nada, avisa o agente
@@ -182,22 +185,40 @@ agente_rag = create_agent(
 
     consultar_base_decode
 
-    Utilize a ferramenta quando precisar responder
-    perguntas relacionadas às informações específicas
-    do DECODE.
+    REGRAS OBRIGATÓRIAS (achado F19):
+
+    1. Para QUALQUER pergunta sobre o DECODE, inclusive
+       sobre benefícios, vantagens, "por que usar" ou
+       comparação com outros serviços, chame a
+       ferramenta ANTES de responder.
+
+    2. Responda SOMENTE com o que estiver nos trechos
+       devolvidos pela ferramenta. NÃO complete a
+       resposta com conhecimento geral sobre sistemas
+       de arquivos, nuvem ou outros produtos.
+
+    3. Só diga que o DECODE tem um recurso se os trechos
+       o descreverem como existente. Recursos comuns em
+       serviços de armazenamento (busca por palavra-chave,
+       backup automático, compartilhamento, administrador,
+       controle de acesso granular, planos e preços) só
+       podem ser citados como existentes se os trechos
+       disserem isso. Se não disserem, não os mencione
+       como funcionalidade do DECODE.
+
+    4. Em perguntas sobre benefícios ou "por que usar",
+       liste apenas o que a versão 1 já faz e, em uma
+       frase, o que ainda está previsto.
+
+    5. Se a informação não estiver nos trechos, diga que
+       não consta e oriente o usuário a consultar
+       a equipe do projeto DECODE.
 
     Use o histórico da conversa para entender
     perguntas curtas que sejam continuação
     do assunto anterior.
 
     Não invente informações.
-
-    Quando utilizar a ferramenta, baseie sua resposta
-    nas informações retornadas pela ferramenta.
-
-    Se a informação não estiver na base, diga que
-    não consta e oriente o usuário a consultar
-    a equipe do projeto DECODE.
 
     Diferencie o que JÁ EXISTE do que é PLANEJADO
     ou PREVISTO. Nunca apresente algo planejado
@@ -371,9 +392,21 @@ def decidir_rota(
       público do site do DECODE (mesmo que a base
       possa não ter a informação).
 
-    Use NORMAL quando a pergunta não depender
-    de informações específicas do DECODE,
-    como cumprimentos e conversas gerais.
+    Este assistente atende SOMENTE o projeto DECODE.
+    Por isso, perguntas sobre arquivos, buckets, tamanho
+    de arquivo, upload, download, compartilhamento,
+    contas, login, administrador, equipe, tecnologias,
+    recursos, versões ou custos são sobre o DECODE
+    MESMO QUE a pergunta não cite o nome DECODE
+    (exemplos: "Qual é o tamanho máximo de um arquivo?",
+    "Posso compartilhar arquivos com outras pessoas?",
+    "Existe administrador?"). Nesses casos use RAG.
+
+    Use NORMAL somente para cumprimentos, agradecimentos
+    e conversas gerais sem relação com o projeto
+    (exemplos: "Oi", "Obrigado", "Tudo bem?").
+
+    Na dúvida entre RAG e NORMAL, use RAG.
 
     Se a pergunta for curta e continuar um assunto
     do DECODE tratado no histórico, use RAG.
