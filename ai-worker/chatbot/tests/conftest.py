@@ -16,6 +16,7 @@ from langchain_core.outputs import ChatGeneration, ChatResult
 
 CODIGO = Path(__file__).resolve().parent.parent
 CHAMADAS = []  # tudo o que chega ao "LLM" simulado
+ROTA = {"valor": "NORMAL"}  # o que o roteador simulado "decide"
 
 
 class LLMFalso(BaseChatModel):
@@ -29,7 +30,8 @@ class LLMFalso(BaseChatModel):
     def _generate(self, messages, stop=None, run_manager=None, **kwargs):
         textos = [str(m.content) for m in messages]
         CHAMADAS.append({"roles": [m.type for m in messages], "textos": textos})
-        resposta = "NORMAL" if "roteador" in textos[-1].lower() else "ok"
+        # O roteador é a chamada cuja 1ª mensagem (de sistema) fala em "roteador"
+        resposta = ROTA["valor"] if "roteador" in textos[0].lower() else "ok"
         return ChatResult(generations=[ChatGeneration(message=AIMessage(content=resposta))])
 
 
@@ -85,3 +87,11 @@ def chamadas():
 @pytest.fixture()
 def llm_falso():
     return LLMFalso
+
+
+@pytest.fixture()
+def rota_falsa():
+    """Permite ao teste escolher o que o roteador simulado responde (RAG, NORMAL, FORA...)."""
+    ROTA["valor"] = "NORMAL"
+    yield ROTA
+    ROTA["valor"] = "NORMAL"
