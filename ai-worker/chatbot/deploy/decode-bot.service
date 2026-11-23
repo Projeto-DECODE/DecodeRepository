@@ -1,0 +1,26 @@
+# =====================================================
+# decode-bot.service  -  mantém o bot sempre ligado
+# =====================================================
+#
+# Instalar em: /etc/systemd/system/decode-bot.service
+# (passo a passo no GUIA, Parte 10)
+
+[Unit]
+Description=DECODE Bot do Telegram
+# Inicia depois da rede e depois da API
+After=network.target decode-api.service
+# Se a API não puder iniciar, o bot também não inicia
+Wants=decode-api.service
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/decode-chatbot
+# Mesmo comando que você roda à mão (python da .venv)
+ExecStart=/home/ubuntu/decode-chatbot/.venv/bin/python bot.py
+Restart=always
+RestartSec=5
+# Mostra os prints do bot na hora no journalctl
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

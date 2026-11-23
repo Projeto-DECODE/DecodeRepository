@@ -50,3 +50,6 @@ esdata/
 *.iml
 .DS_Store
 Thumbs.db
+
+# Chatbot - ai-worker/chatbot
+banco_chroma/
