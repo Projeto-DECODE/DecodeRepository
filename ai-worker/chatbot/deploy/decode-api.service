@@ -1,0 +1,32 @@
+# =====================================================
+# decode-api.service  -  mantém a API sempre ligada
+# =====================================================
+#
+# Instalar em: /etc/systemd/system/decode-api.service
+# (passo a passo no GUIA, Parte 10)
+#
+# Sem este arquivo, a API (uvicorn) para quando você
+# fecha o terminal. Com ele, o Ubuntu liga a API sozinho
+# ao iniciar a máquina e a religa se ela cair.
+
+[Unit]
+# Descrição que aparece nos comandos de status
+Description=DECODE API (FastAPI + uvicorn)
+# Só inicia depois que a rede estiver pronta
+After=network.target
+
+[Service]
+# Usuário padrão da EC2 com Ubuntu
+User=ubuntu
+# Pasta do projeto (onde estão app.py, .env e banco_chroma)
+WorkingDirectory=/home/ubuntu/decode-chatbot
+# Mesmo comando que você roda à mão, usando o uvicorn da .venv
+ExecStart=/home/ubuntu/decode-chatbot/.venv/bin/uvicorn app:app --host 0.0.0.0 --port 8000
+# Se o programa parar por erro, liga de novo
+Restart=always
+# Espera 5 segundos antes de religar
+RestartSec=5
+
+[Install]
+# Liga automaticamente quando a máquina inicia
+WantedBy=multi-user.target
