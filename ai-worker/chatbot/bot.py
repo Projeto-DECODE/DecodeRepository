@@ -97,7 +97,7 @@ aviso_privacidade = (
     "por um serviço externo de IA (Groq, nos EUA)."
 )
 
-# True  -> o bot envia "Rota: RAG" ou "Rota: NORMAL" antes da resposta
+# True  -> o bot envia "Rota: RAG", "Rota: NORMAL" ou "Rota: FORA" antes da resposta
 #          (útil para testar, como a aula 6.2 mostrava o agente)
 # False -> o usuário vê apenas a resposta
 mostrar_rota = True
