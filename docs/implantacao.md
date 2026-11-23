@@ -74,7 +74,7 @@ Em todo Pull Request e em todo push na `main`, roda em paralelo: testes dos 3 se
 
 ### 5.2 Implantação contínua (`deploy.yml`)
 
-Dispara no push na `main` quando mudam `backend/`, `frontend/`, `infra/` ou o próprio workflow (e também sob demanda, por `workflow_dispatch`). Alterações só de documentação **não** implantam.
+Dispara no push na `main` quando mudam `backend/`, `frontend/`, `infra/` ou o próprio workflow (e também sob demanda, por `workflow_dispatch`). Alterações fora dessas pastas (por exemplo `docs/`, `ai-worker/` e o `README.md`) **não** implantam. Atenção: qualquer arquivo dentro de `backend/` ou `frontend/`, mesmo documentação como o `backend/.env.example`, dispara o workflow (que ainda pede aprovação antes de agir)..
 
 1. O job **publicar e implantar** pede a **aprovação** do revisor do Environment `production`.
 2. Após aprovado, constrói as 4 imagens e publica no ECR com a tag do commit.
