@@ -10,7 +10,7 @@ Projeto Integrador IV — SENAI-SP, 4º semestre de Análise e Desenvolvimento d
 |---|---|
 | `backend/` | API REST, autenticação JWT, filas (Redis), indexação (Elasticsearch), logs e auditoria |
 | `frontend/` | Aplicação web responsiva (upload, busca, visualizador, dashboard) |
-| `ai-worker/` | OCR (Tesseract), NLP, embeddings, busca vetorial e chat com LLM |
+| `ai-worker/` | chatbot do Telegram (RAG com Groq); OCR e embeddings reservados para a v2.0 |
 | `infra/` | Docker/Compose, Nginx, scripts de deploy e infraestrutura na AWS |
 | `docs/` | Arquitetura, referência da API, guia de implantação e registro de decisões |
 | `.github/` | Template de PR, CODEOWNERS e workflows de CI/CD |
