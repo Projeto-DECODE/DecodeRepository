@@ -60,6 +60,9 @@ perguntas = [
     "Quem faz parte da equipe?",
     "Como funciona o deploy?",
     "O DECODE já tem OCR?",
+    "Existe administrador no DECODE?",
+    "Posso compartilhar arquivos com outras pessoas?",
+    "Qual é o tamanho máximo de um arquivo?",
 ]
 
 
@@ -73,10 +76,10 @@ for pergunta in perguntas:
     print("PERGUNTA:", pergunta)
 
     # similarity_search_with_score devolve (documento, distância)
-    # k=5 -> mostra 5 itens (o app.py usa k=3)
+    # k=8 -> mostra 8 itens (o app.py usa os 5 primeiros)
     resultados = vectorstore.similarity_search_with_score(
         pergunta,
-        k=5
+        k=8
     )
 
     for posicao, (documento, distancia) in enumerate(resultados, start=1):
@@ -89,10 +92,10 @@ for pergunta in perguntas:
         else:
             texto_titulo = "(título não encontrado)"
 
-        # O app.py só usa os 3 primeiros; marcamos com * quem entra
-        marca = "*" if posicao <= 3 else " "
+        # O app.py só usa os 5 primeiros; marcamos com * quem entra
+        marca = "*" if posicao <= 5 else " "
 
         print(f"  {marca} {distancia:.3f} | {texto_titulo}")
 
 print()
-print("Itens marcados com * são os que o app.py entrega ao modelo (k=3).")
+print("Itens marcados com * são os que o app.py entrega ao modelo (k=5).")
