@@ -2,38 +2,44 @@
 
 /*
  * Paleta do DECODE.
- * Fundo escuro neutro + verde neon nos destaques (botões, foco, item ativo).
- * Cada cor vira uma classe do Tailwind: bg-fundo, bg-cartao, text-acento, border-borda etc.
+ * Fundo grafite + ciano nos destaques (botões, foco, item selecionado).
+ * Cada cor vira uma classe do Tailwind: bg-fundo, bg-cartao, bg-campo, text-acento, border-borda etc.
  */
 @theme {
-  --color-fundo: #1a1a1e;
-  --color-cartao: #212328;
-  --color-cartao-claro: #2a2d33;
-  --color-borda: #34373e;
-  --color-acento: #39ff14; /* verde neon: destaques */
-  --color-acento-suave: #76ff03; /* verde de apoio: hover e detalhes */
-  --color-sucesso: #3be08e;
-  --color-erro: #ef476a;
-  --color-texto: #fafafa;
-  --color-texto-secundario: #a0a0a0;
+  --color-fundo: #191a1d;
+  --color-cartao: #222428;
+  --color-cartao-claro: #2a2d32;
+  --color-campo: #1b1d21; /* fundo dos campos de texto */
+  --color-borda: #36393f;
+  --color-acento: #00d5e8; /* ciano principal: destaques */
+  --color-acento-suave: #00afc2; /* ciano secundário: hover e detalhes */
+  --color-sucesso: #22c55e;
+  --color-erro: #ef4444;
+  --color-texto: #f5f5f5;
+  --color-texto-secundario: #a0a3aa;
 
   /* Cores por tipo de arquivo (ícones) */
-  --color-tipo-imagem: #4285f4;
-  --color-tipo-pdf: #ea4335;
-  --color-tipo-planilha: #76ff03;
-  --color-tipo-outro: #ff6f00;
+  --color-tipo-imagem: #4c8dff;
+  --color-tipo-pdf: #ef4444;
+  --color-tipo-planilha: #22c55e;
+  --color-tipo-outro: #ff8a1f;
 
   --font-sans: var(--font-inter), Arial, Helvetica, sans-serif;
 
-  /* Brilho verde suave usado no item em foco */
-  --shadow-brilho: 0 0 0 1px rgb(57 255 20 / 0.6), 0 8px 32px -8px rgb(57 255 20 / 0.35);
-  --shadow-brilho-botao: 0 0 20px -4px rgb(57 255 20 / 0.55);
+  /* Brilho ciano suave usado no item em foco */
+  --shadow-brilho: 0 0 0 1px rgb(0 213 232 / 0.55), 0 8px 32px -8px rgb(0 213 232 / 0.35);
+  --shadow-brilho-botao: 0 0 22px -4px rgb(0 213 232 / 0.55);
+  --shadow-foco: 0 0 0 3px rgb(0 213 232 / 0.15);
 }
 
 body {
   background-color: var(--color-fundo);
-  /* Luz verde bem sutil no topo, para o fundo não ficar chapado */
-  background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgb(57 255 20 / 0.07), transparent 70%);
+  /* Faixas de luz bem suaves, como no fundo de referência */
+  background-image:
+    radial-gradient(ellipse 70% 40% at 15% 0%, rgb(255 255 255 / 0.05), transparent 70%),
+    radial-gradient(ellipse 60% 35% at 100% 15%, rgb(255 255 255 / 0.04), transparent 70%),
+    radial-gradient(ellipse 80% 40% at 0% 100%, rgb(255 255 255 / 0.04), transparent 70%);
+  background-attachment: fixed;
   background-repeat: no-repeat;
   color: var(--color-texto);
 }

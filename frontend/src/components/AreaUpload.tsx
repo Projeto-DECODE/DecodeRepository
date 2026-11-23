@@ -35,8 +35,8 @@ export const AreaUpload: React.FC<AreaUploadProps> = ({ enviando, onArquivos }: 
       }}
       onDragLeave={() => setArrastando(false)}
       onDrop={aoSoltar}
-      className={`relative overflow-hidden rounded-lg border-2 border-dashed transition-all duration-300
-        ${arrastando ? "border-acento bg-acento/5 shadow-brilho" : "border-borda bg-cartao/40 hover:border-acento/60"}`}
+      className={`group relative overflow-hidden rounded-xl border-2 border-dashed border-acento transition-all duration-300
+        ${arrastando ? "bg-acento/10 shadow-brilho" : "bg-cartao/40 hover:bg-acento/5 hover:shadow-brilho"}`}
     >
       <button
         type="button"
@@ -44,10 +44,10 @@ export const AreaUpload: React.FC<AreaUploadProps> = ({ enviando, onArquivos }: 
         onClick={() => inputRef.current?.click()}
         className="flex w-full flex-col items-center gap-3 px-6 py-10 text-center disabled:cursor-wait"
       >
-        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-acento/10 text-acento">
+        <span className="flex h-14 w-14 items-center justify-center rounded-xl bg-acento/15 text-acento transition-transform duration-300 group-hover:-translate-y-0.5">
           <Icone nome="upload" tamanho={28} />
         </span>
-        <span className="font-medium">
+        <span className="text-lg font-medium">
           {enviando ? "Enviando arquivo…" : "Arraste arquivos aqui ou clique para escolher"}
         </span>
         <span className="text-sm text-texto-secundario">Até 10 MB por arquivo</span>

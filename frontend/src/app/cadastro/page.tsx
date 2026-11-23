@@ -84,14 +84,16 @@ export default function CadastroPage() {
 
         <form
           onSubmit={cadastrar}
-          className="flex flex-col gap-5 rounded-xl border border-white/10 bg-cartao/70 p-6 shadow-2xl shadow-black/40 backdrop-blur-md md:p-8"
+          className="surgir flex flex-col gap-5 rounded-2xl border border-acento/50 bg-cartao/80 p-6 shadow-[0_0_40px_-12px_rgb(0_213_232/0.35)] backdrop-blur-md md:p-8"
           noValidate
         >
-          <Campo id="nome" rotulo="Nome" valor={nome} onChange={setNome} erro={erroNome} autoComplete="name" maxLength={100} />
+          <Campo id="nome" rotulo="Nome" icone="usuario" placeholder="Digite seu nome" valor={nome} onChange={setNome} erro={erroNome} autoComplete="name" maxLength={100} />
           <Campo
             id="email"
             rotulo="E-mail"
             tipo="email"
+            icone="email"
+            placeholder="Digite seu e-mail"
             valor={email}
             onChange={setEmail}
             erro={erroEmail}
@@ -102,6 +104,8 @@ export default function CadastroPage() {
             id="senha"
             rotulo="Senha"
             tipo="password"
+            icone="cadeado"
+            placeholder="Crie uma senha"
             valor={senha}
             onChange={setSenha}
             erro={erroSenha}
@@ -109,7 +113,7 @@ export default function CadastroPage() {
             autoComplete="new-password"
             maxLength={128}
           />
-          <Botao tipo="submit" larguraTotal desabilitado={carregando}>
+          <Botao tipo="submit" icone="seta" larguraTotal desabilitado={carregando}>
             {carregando ? "Cadastrando…" : "Cadastrar"}
           </Botao>
         </form>

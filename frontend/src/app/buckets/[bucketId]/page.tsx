@@ -242,7 +242,7 @@ export default function ArquivosPage() {
       </nav>
 
       <div className="mb-6">
-        <h1 className="break-all text-3xl font-bold">{nomeBucket || "Arquivos"}</h1>
+        <h1 className="break-all text-3xl font-bold tracking-tight">{nomeBucket || "Arquivos"}</h1>
         {estado === "conteudo" && (
           <p className="mt-1 text-sm text-texto-secundario">
             {total} {total === 1 ? "arquivo" : "arquivos"}
@@ -259,15 +259,22 @@ export default function ArquivosPage() {
         <label htmlFor="pesquisa" className="sr-only">
           Pesquisar por nome
         </label>
-        <input
-          id="pesquisa"
-          type="text"
-          placeholder="Pesquisar por nome"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          onKeyDown={(event) => event.key === "Enter" && pesquisar()}
-          className="min-h-12 flex-1 rounded-md border border-borda bg-cartao px-4 text-texto placeholder:text-texto-secundario/60 transition-all duration-300 focus:border-acento focus:shadow-[0_0_0_3px_rgb(57_255_20/0.15)] focus:outline-none"
-        />
+        <div className="relative flex-1">
+          <Icone
+            nome="busca"
+            tamanho={20}
+            className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-texto-secundario"
+          />
+          <input
+            id="pesquisa"
+            type="text"
+            placeholder="Pesquisar por nome"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            onKeyDown={(event) => event.key === "Enter" && pesquisar()}
+            className="min-h-12 w-full rounded-lg border border-borda bg-campo pl-12 pr-4 text-texto placeholder:text-texto-secundario/70 transition-all duration-300 hover:border-texto-secundario/50 focus:border-acento focus:shadow-foco focus:outline-none"
+          />
+        </div>
         <label htmlFor="tipo" className="sr-only">
           Tipo de arquivo
         </label>
@@ -275,7 +282,7 @@ export default function ArquivosPage() {
           id="tipo"
           value={tipo}
           onChange={(event) => setTipo(event.target.value as FiltroTipo)}
-          className="min-h-12 rounded-md border border-borda bg-cartao px-4 text-texto transition-all duration-300 focus:border-acento focus:outline-none"
+          className="min-h-12 cursor-pointer rounded-lg border border-borda bg-campo px-4 font-medium text-texto transition-all duration-300 hover:border-texto-secundario/50 focus:border-acento focus:shadow-foco focus:outline-none md:min-w-48"
         >
           <option value="">Todos os tipos</option>
           <option value="imagem">Imagens</option>

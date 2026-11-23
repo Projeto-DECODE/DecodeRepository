@@ -83,12 +83,12 @@ export const BucketCard: React.FC<BucketCardProps> = ({
     if (arquivos.length > 0 && !enviando) onSoltarArquivos(arquivos);
   }
 
-  const vidro = "border bg-cartao/70 backdrop-blur-md";
+  const vidro = "border bg-linear-to-b from-cartao-claro to-cartao shadow-[0_16px_40px_-16px_rgb(0_0_0/0.85)]";
   const borda = arrastando
     ? "border-2 border-dashed border-acento"
     : ativo
       ? "border-2 border-acento shadow-brilho"
-      : "border-white/10 hover:border-acento/60";
+      : "border-white/10 hover:border-acento/70 hover:shadow-brilho";
 
   // Bucket sendo apagado no servidor: esmaecido e sem clique
   if (excluindo) {
@@ -122,7 +122,7 @@ export const BucketCard: React.FC<BucketCardProps> = ({
       {/* Luz suave no canto, como no vidro da referência */}
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute -left-16 -top-16 h-40 w-40 rounded-full bg-white/5 blur-2xl"
+        className="pointer-events-none absolute -left-16 -top-16 h-40 w-40 rounded-full bg-acento/10 blur-3xl"
       />
 
       <Link
