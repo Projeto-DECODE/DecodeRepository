@@ -158,3 +158,68 @@ O RDS mantém backup automático de 1 dia. Antes de marcos de entrega, gere tamb
 - Os valores de produção ficam no `.env` da EC2 e em um gerenciador de senhas da equipe.
 - Se um segredo vazar: revogar ou rotacionar na hora. Apagar o commit não basta.
 - Ao fim do projeto, **excluir as chaves de acesso do usuário `decode-ci-deploy`** e remover os recursos que não forem mais necessários.
+
+## 9. Chatbot do Telegram (`ai-worker/chatbot`)
+
+Assistente do projeto no Telegram: um bot (`bot.py`) que chama uma API FastAPI (`app.py`) com RAG sobre a base de conhecimento do DECODE e um modelo da Groq. Roda na mesma EC2 do site, **fora do Docker**, como dois serviços do systemd. O deploy automático (seção 5) **não** cobre esta parte: a instalação e as atualizações são manuais.
+
+### 9.1 Como está instalado
+
+| Item | Valor |
+|---|---|
+| Serviços | `decode-api` (uvicorn) e `decode-bot` |
+| Usuário | `decode-chatbot`, de sistema, sem login e sem senha |
+| Pasta | `/opt/decode-chatbot` (código em `repo/`, ambiente Python em `.venv/`) |
+| Rede | a API escuta só em `127.0.0.1:8000`; **nenhuma porta nova** foi aberta no Security Group |
+| Memória | `decode-api` limitada a 2,5 GB e `decode-bot` a 400 MB, para o chatbot nunca competir com o site |
+| Prioridade | CPU com prioridade menor que a do site |
+| Segredos | `repo/ai-worker/chatbot/.env` (permissão 600): `GROQ_API_KEY`, `TELEGRAM_TOKEN` e `API_URL`. **Nunca versionado** |
+| Base vetorial | pasta `banco_chroma/`, gerada a partir de `DECODE_Base_Conhecimento.pdf` (não versionada) |
+
+Um token do Telegram só pode ter **uma** instância ligada. Se o mesmo token rodar em outro lugar, o Telegram devolve erro 409 e as duas caem.
+
+### 9.2 Operação
+
+| Objetivo | Comando |
+|---|---|
+| Estado dos serviços | `sudo systemctl status decode-api decode-bot --no-pager` |
+| Log do bot | `sudo journalctl -u decode-bot -f` |
+| Log da API | `sudo journalctl -u decode-api -f` |
+| Reiniciar | `sudo systemctl restart decode-api decode-bot` |
+| Parar e desligar de vez | `sudo systemctl disable --now decode-bot decode-api` |
+
+Parar o chatbot não afeta o site.
+
+### 9.3 Atualizar o código
+
+```
+sudo -H -u decode-chatbot git -C /opt/decode-chatbot/repo pull
+sudo systemctl restart decode-api decode-bot
+```
+
+Se mudaram as dependências, instale de novo com o `pip` do `.venv`.
+
+### 9.4 Atualizar a base de conhecimento
+
+Quando o PDF da base mudar, o banco vetorial precisa ser refeito (sem apagar antes, os trechos ficam duplicados):
+
+```
+sudo systemctl stop decode-api
+sudo rm -rf /opt/decode-chatbot/repo/ai-worker/chatbot/banco_chroma
+sudo systemd-run --wait --pipe --collect -p MemoryMax=2500M -p User=decode-chatbot -p Nice=19 -p WorkingDirectory=/opt/decode-chatbot/repo/ai-worker/chatbot -p Environment=HOME=/opt/decode-chatbot /opt/decode-chatbot/.venv/bin/python banco_vetorial.py
+sudo systemctl start decode-api
+```
+
+### 9.5 Trocar uma chave ou o token
+
+Se uma chave vazar: revogue na hora (console da Groq; `/revoke` no BotFather), crie outra, edite o `.env` e reinicie os dois serviços. Apagar a mensagem onde ela apareceu não basta.
+
+### 9.6 Limitações conhecidas
+
+| Limitação | Impacto |
+|---|---|
+| Sem job de Python no CI e sem deploy automático | erros só aparecem em produção; atualização manual |
+| API sem autenticação | protegida apenas por escutar em `127.0.0.1` |
+| Histórico das conversas só na memória do bot | reiniciar o bot zera as conversas |
+| Modelo externo (Groq) com cota gratuita | o bot para de responder se a cota acabar |
+| O modelo pode afirmar o que o DECODE não faz | a base e o prompt precisam deixar claro o que não existe na versão atual |
