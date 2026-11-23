@@ -41,7 +41,7 @@ Usuário no Telegram
 
 | Arquivo | Função |
 |---|---|
-| `DECODE_Base_Conhecimento.pdf` | Base de conhecimento (66 itens, 17 páginas) |
+| `DECODE_Base_Conhecimento.pdf` | Base de conhecimento (69 itens, 19 páginas) |
 | `banco_vetorial.py` | Lê o PDF e cria o banco vetorial |
 | `app.py` | API FastAPI com roteador, agentes e histórico |
 | `bot.py` | Bot do Telegram que chama a API |
@@ -357,8 +357,8 @@ python banco_vetorial.py
 
 **O que acontece, na ordem:**
 
-1. `Páginas carregadas: 17`
-2. `Quantidade de chunks: 66` e a lista com o tamanho de cada chunk (um chunk por item da base)
+1. `Páginas carregadas: 19`
+2. `Quantidade de chunks: 69` e a lista com o tamanho de cada chunk (um chunk por item da base)
 3. Download do modelo de embeddings (**só na primeira vez**, alguns minutos — pode aparecer barra de progresso)
 4. `Modelo de embeddings carregado.`
 5. `Banco vetorial criado.`

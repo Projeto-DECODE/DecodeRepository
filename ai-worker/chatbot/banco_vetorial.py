@@ -51,7 +51,7 @@ loader = PyPDFLoader(
 # Lê o PDF: devolve uma lista com UMA entrada por página
 documentos = loader.load()
 
-# Mostra quantas páginas foram lidas (esperado: 17)
+# Mostra quantas páginas foram lidas (esperado: 19)
 print(
     f"Páginas carregadas: {len(documentos)}"
 )
@@ -77,7 +77,7 @@ chunks = text_splitter.split_documents(
     documentos
 )
 
-# Mostra quantos chunks foram criados (esperado: 66,
+# Mostra quantos chunks foram criados (esperado: 69,
 # um para cada item da base de conhecimento)
 print(
     "Quantidade de chunks:",
