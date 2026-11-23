@@ -1,19 +1,44 @@
-fastapi
-uvicorn[standard]
-python-dotenv
+# =====================================================
+# requirements.txt - bibliotecas do chatbot DECODE
+# =====================================================
+#
+# Cada biblioteca tem a versão EXATA (==). Assim, a EC2, o seu
+# computador e o CI instalam sempre as mesmas versões, e uma
+# atualização nova de um pacote não quebra o chatbot sem aviso.
+#
+# As versões vêm do requirements.lock, que registra o que está
+# realmente instalado e funcionando na EC2 (131 pacotes, contando
+# as dependências das dependências). Aqui ficam só as 15 que o
+# nosso código usa diretamente.
+#
+# O PyTorch (torch) NÃO está aqui de propósito: ele é instalado
+# ANTES, na versão só para CPU, conforme o GUIA_EC2_DECODE.md
+# (Parte 5.2). Instale com:
+#   pip install --no-cache-dir -r requirements.txt
+#
+# Para atualizar uma versão: teste o chatbot com a versão nova,
+# troque o número aqui e atualize o requirements.lock.
 
-langchain
-langchain-core
-langchain-community
-langchain-text-splitters
+# --- API e servidor
+fastapi==0.165.0
+uvicorn[standard]==0.54.0
+python-dotenv==1.2.4
 
-langchain-groq
-langchain-chroma
-langchain-huggingface
+# --- LangChain (agentes e ferramentas)
+langchain==1.5.2
+langchain-core==1.8.4
+langchain-community==0.4.2
+langchain-text-splitters==1.1.3
 
-chromadb
-sentence-transformers
-pypdf
+# --- Modelo de linguagem, banco vetorial e embeddings
+langchain-groq==1.2.1
+langchain-chroma==1.1.0
+langchain-huggingface==1.2.3
 
-pyTelegramBotAPI
-requests
+chromadb==1.5.9
+sentence-transformers==6.3.0
+pypdf==7.1.1
+
+# --- Telegram e chamadas HTTP
+pyTelegramBotAPI==4.37.1
+requests==2.34.2
