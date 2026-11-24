@@ -20,10 +20,25 @@ cp -f docker-compose.yml docker-compose.prev.yml
 cp -f docker-compose.new.yml docker-compose.yml
 export TAG ECR_REGISTRY="$REG"
 
+# O Nginx guarda o IP do frontend quando sobe. Quando o frontend é recriado
+# com outro IP e o Nginx continua rodando, ele devolve 502. Por isso o Nginx é
+# reiniciado depois de cada "up" e só então o site é testado (com tentativas).
+verificar_site() {
+  docker compose restart nginx
+  local i
+  for i in $(seq 1 15); do
+    if curl -fsS -o /dev/null http://127.0.0.1/; then
+      return 0
+    fi
+    sleep 2
+  done
+  return 1
+}
+
 echo "== implantando $TAG (anterior: ${PREV:-nenhuma})"
 if docker compose pull \
   && docker compose up -d --wait --wait-timeout 240 \
-  && curl -fsS -o /dev/null http://127.0.0.1/; then
+  && verificar_site; then
   echo "$TAG" > .last_tag
   echo "== DEPLOY OK: $TAG"
   exit 0
@@ -33,6 +48,12 @@ echo "== FALHA no deploy de $TAG"
 if [ -n "$PREV" ]; then
   echo "== revertendo para $PREV"
   cp -f docker-compose.prev.yml docker-compose.yml
-  TAG="$PREV" docker compose up -d --wait --wait-timeout 240
+  export TAG="$PREV"
+  docker compose up -d --wait --wait-timeout 240
+  if verificar_site; then
+    echo "== ROLLBACK OK: site respondendo na versão $PREV"
+  else
+    echo "== ATENÇÃO: rollback concluído, mas o site NÃO responde. Verifique a EC2."
+  fi
 fi
 exit 1
