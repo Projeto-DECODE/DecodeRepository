@@ -26,9 +26,9 @@ export default function InicioPage() {
     return (
       <div
         key={recurso.titulo}
-        className="group flex flex-col gap-4 rounded-lg border border-white/5 bg-cartao p-6 transition-all duration-300 hover:-translate-y-1 hover:border-acento/60"
+        className="group flex flex-col gap-4 rounded-xl border border-white/10 bg-linear-to-br from-cartao-claro to-cartao p-6 shadow-[0_10px_30px_-12px_rgb(0_0_0/0.8)] transition-all duration-300 hover:-translate-y-1 hover:border-acento/70 hover:shadow-brilho"
       >
-        <span className={`flex h-12 w-12 items-center justify-center rounded-md transition-transform duration-300 group-hover:scale-110 ${recurso.cor}`}>
+        <span className={`flex h-12 w-12 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110 ${recurso.cor}`}>
           <Icone nome={recurso.icone} tamanho={26} />
         </span>
         <h3 className="text-lg font-medium">{recurso.titulo}</h3>
@@ -53,14 +53,14 @@ export default function InicioPage() {
           {nomeLogado ? (
             <Link
               href="/buckets"
-              className="flex min-h-12 items-center gap-2 rounded-md bg-acento px-6 font-semibold text-fundo transition-all duration-300 hover:bg-acento-suave hover:shadow-brilho-botao"
+              className="flex min-h-12 items-center gap-2 rounded-lg bg-acento px-6 font-semibold text-fundo transition-all duration-300 hover:bg-acento-suave hover:shadow-brilho-botao"
             >
               Ir para meus buckets <Icone nome="voltar" tamanho={18} className="rotate-180" />
             </Link>
           ) : (
             <Link
               href="/cadastro"
-              className="flex min-h-12 items-center rounded-md bg-acento px-6 font-semibold text-fundo transition-all duration-300 hover:bg-acento-suave hover:shadow-brilho-botao lg:hidden"
+              className="flex min-h-12 items-center rounded-lg bg-acento px-6 font-semibold text-fundo transition-all duration-300 hover:bg-acento-suave hover:shadow-brilho-botao lg:hidden"
             >
               Criar conta grátis
             </Link>

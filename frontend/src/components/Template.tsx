@@ -51,7 +51,7 @@ const Header: React.FC = () => {
       <Link
         href="/cadastro"
         onClick={() => setMenuAberto(false)}
-        className="ml-2 flex min-h-11 items-center rounded-md bg-acento px-5 text-sm font-semibold text-fundo transition-all duration-300 hover:bg-acento-suave hover:shadow-brilho-botao"
+        className="ml-2 flex min-h-11 items-center rounded-lg bg-acento px-5 text-sm font-semibold text-fundo transition-all duration-300 hover:bg-acento-suave hover:shadow-brilho-botao"
       >
         Criar conta
       </Link>
@@ -64,14 +64,14 @@ const Header: React.FC = () => {
         Meus buckets
       </Link>
       <span className="flex min-h-11 items-center gap-2 px-3 text-sm text-texto">
-        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-acento/15 text-xs font-bold uppercase text-acento">
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-acento-suave text-sm font-bold uppercase text-fundo">
           {nomeLogado.charAt(0)}
         </span>
         Olá, {nomeLogado}
       </span>
       <button
         type="button"
-        className="flex min-h-11 items-center gap-2 border border-texto-secundario/50 px-4 text-sm text-texto transition-colors hover:border-acento hover:text-acento md:min-h-9"
+        className="flex min-h-11 items-center gap-2 rounded-lg border border-borda bg-campo px-4 text-sm text-texto transition-colors hover:border-acento hover:text-acento md:min-h-10"
         onClick={() => {
           setMenuAberto(false);
           setPerfilAberto(true);
@@ -81,7 +81,7 @@ const Header: React.FC = () => {
       </button>
       <button
         type="button"
-        className="flex min-h-11 items-center gap-2 border border-erro/70 px-4 text-sm text-erro transition-colors hover:bg-erro hover:text-fundo md:min-h-9"
+        className="flex min-h-11 items-center gap-2 rounded-lg border border-erro/70 bg-erro/5 px-4 text-sm text-erro transition-colors hover:bg-erro hover:text-texto md:min-h-10"
         onClick={sair}
       >
         <Icone nome="sair" tamanho={16} /> Sair
@@ -90,11 +90,11 @@ const Header: React.FC = () => {
   );
 
   return (
-    <header className="sticky top-0 z-20 border-b border-white/5 bg-fundo/80 backdrop-blur-md">
+    <header className="sticky top-0 z-20 border-b border-borda/70 bg-fundo/85 backdrop-blur-md">
       <div className="container mx-auto flex items-center justify-between gap-4 px-4 py-4">
         <Link href={nomeLogado ? "/buckets" : "/"} className="flex items-center gap-3">
           <Icone nome="nuvem" tamanho={30} className="text-acento" />
-          <span className="text-xl font-bold tracking-[0.2em]">DECODE</span>
+          <span className="text-xl font-bold tracking-[0.15em]">DECODE</span>
           <span className="hidden border-l border-borda pl-3 text-sm text-texto-secundario lg:block">
             Armazenamento na Nuvem com Controle Total
           </span>
@@ -146,8 +146,8 @@ const Header: React.FC = () => {
 
 const Footer: React.FC = () => {
   return (
-    <footer className="border-t border-borda">
-      <div className="container mx-auto px-4 py-6 text-center text-sm text-texto-secundario">
+    <footer className="mt-8">
+      <div className="container mx-auto border-t border-borda/70 px-4 py-6 text-center text-sm text-texto-secundario">
         DECODE Cloud Storage © 2026 · Projeto Integrador IV · SENAI-SP
       </div>
     </footer>

@@ -37,21 +37,23 @@ export const ArquivoCard: React.FC<ArquivoCardProps> = ({
 }: ArquivoCardProps) => {
   return (
     <div
-      className={`group relative flex items-center rounded-lg border bg-cartao transition-all duration-300
-        hover:border-acento/70 hover:bg-cartao-claro focus-within:border-acento
-        ${selecionado ? "border-acento shadow-brilho" : "border-white/5"}`}
+      className={`group relative flex items-center overflow-hidden rounded-xl border bg-linear-to-br from-cartao-claro to-cartao
+        shadow-[0_10px_30px_-12px_rgb(0_0_0/0.8)] transition-all duration-300
+        hover:-translate-y-1 hover:border-acento/70 hover:shadow-brilho focus-within:border-acento
+        ${selecionado ? "border-acento shadow-brilho" : "border-white/10"}`}
     >
-      <button type="button" onClick={onAbrir} className="flex min-w-0 flex-1 items-center gap-4 rounded-lg p-4 pr-14 text-left focus-visible:outline-none">
+      {selecionado && <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1 bg-acento" />}
+      <button type="button" onClick={onAbrir} className="flex min-w-0 flex-1 items-center gap-4 rounded-xl p-5 pr-14 text-left focus-visible:outline-none">
         <span
-          className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-md transition-transform duration-300 group-hover:scale-105 ${COR_POR_TIPO[tipo]}`}
+          className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl ring-1 ring-white/5 transition-transform duration-300 group-hover:scale-110 ${COR_POR_TIPO[tipo]}`}
         >
-          <Icone nome={ICONE_POR_TIPO[tipo]} tamanho={24} />
+          <Icone nome={ICONE_POR_TIPO[tipo]} tamanho={26} />
         </span>
         <span className="min-w-0">
-          <span className="block truncate font-medium" title={nome}>
+          <span className="block truncate text-base font-semibold" title={nome}>
             {nome}
           </span>
-          <span className="block text-sm text-texto-secundario">
+          <span className="mt-0.5 block text-sm text-texto-secundario">
             {tamanho} · {dataUpload}
           </span>
         </span>
